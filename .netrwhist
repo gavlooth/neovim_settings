@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/heefoo/emtec/ken/src/ken/charts'
+let g:netrw_dirhist_2='/home/heefoo/emtec/ken/src/ken/charts/components'
+let g:netrw_dirhist_3='/home/heefoo/emtec/ken/src/ken/charts'
+let g:netrw_dirhist_4='/home/heefoo/emtec/ken'
+let g:netrw_dirhist_5='/mnt/Data/emtec/ken/src/ken/fleet'
+let g:netrw_dirhist_6='/mnt/Data/emtec/ken/src/ken'
