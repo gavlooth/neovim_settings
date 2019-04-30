@@ -1,6 +1,5 @@
 "let g:python3_host_prog = '/usr/bin/python3.6'
 set rtp+=~/.vim
-set rtp+=~/.skim
 
 call plug#begin('~/.vim/plugged')
 "Plug 'JamshedVesuna/vim-markdown-preview'
@@ -10,7 +9,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'haya14busa/incsearch.vim'
 Plug 'tomtom/tcomment_vim'
@@ -25,14 +23,9 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'lambdalisue/suda.vim'
-Plug 'lotabout/skim.vim'
 Plug 'wakatime/vim-wakatime'
-"5311b7e3-ff04-46f5-a640-099032b346c1
-
-"vim-lsp
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
-
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 "ncm2
 
 Plug 'ncm2/ncm2-bufword'
@@ -45,6 +38,8 @@ Plug 'autozimu/LanguageClient-neovim', {
 "Clojure
 " Plug 'vim-scripts/paredit.vim'
 " Plug 'tpope/vim-classpath'
+Plug 'vim-syntastic/syntastic'
+Plug 'aclaimant/syntastic-joker'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-fireplace'
@@ -109,7 +104,7 @@ map T <Plug>Sneak_T
 set cc=80
 
 "Font
-set guifont=Monaco:h18
+" set guifont=Monaco:h18
 set mouse=c
 " Space Mono
 " Many settings
@@ -506,7 +501,6 @@ let g:neomake_clojure_enabled_makers = ['check']
 set virtualedit=all
 
 
-
 "User defined functions
 
 
@@ -591,7 +585,6 @@ nnoremap <silent> gK :call LanguageClient#textDocument_rename()<CR>
 
 
 let g:better_whitespace_ctermcolor='green'
-
 let g:better_whitespace_guicolor='green'
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
@@ -600,34 +593,35 @@ let g:strip_whitespace_confirm=0
 
 
 
-if executable('sk')
 
-"SKIM line earch
+if executable('fzf')
+
+"FZF line search
 nnoremap <silent> <leader>r :Rg<cr>
 
-"SKIM searchfiles
-nnoremap <silent> <leader>f :SK -m<cr>
+"FZF search files
+nnoremap <silent> <leader>f :FZF  --reverse <cr>
 
-" SKIM for open buffers
+" FZF for open buffers
   nnoremap <silent> <leader>b :Buffers<cr>
 
-" SKIM for MRU
+" FZF for MRU
   nnoremap <silent> <leader>m :History<cr>
 
 " Use fuzzy completion relative filepaths across directory
-  imap <expr> <c-x><c-f> skim#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+  imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 
 " Better command history with q:
-  command! CmdHist call skim#vim#command_history({'right': '40'})
+  command! CmdHist call fzf#vim#command_history({'right': '40'})
   nnoremap q: :CmdHist<CR>
 
 " Better search history
-  command! QHist call skim#vim#search_history({'right': '40'})
+  command! QHist call fzf#vim#search_history({'right': '40'})
   nnoremap q/ :QHist<CR>
 
-  command! -bang -nargs=* Ack call skim#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
+  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
 
- nmap ,<tab> <plug>(skim-maps-n)
+ nmap ,<tab> <plug>(fzf-maps-n)
 
 
 end
@@ -635,34 +629,50 @@ end
 
 
 
-" if executable('fzf')
+" if executable('sk')
 "
-" "FZF line search
+" "SKIM line earch
 " nnoremap <silent> <leader>r :Rg<cr>
 "
-" "FZF search files
-" nnoremap <silent> <leader>f :FZF -m<cr>
+" "SKIM searchfiles
+" nnoremap <silent> <leader>f :SK -m<cr>
 "
-" " FZF for open buffers
+" " SKIM for open buffers
 "   nnoremap <silent> <leader>b :Buffers<cr>
 "
-" " FZF for MRU
+" " SKIM for MRU
 "   nnoremap <silent> <leader>m :History<cr>
 "
 " " Use fuzzy completion relative filepaths across directory
-"   imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+"   imap <expr> <c-x><c-f> skim#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 "
 " " Better command history with q:
-"   command! CmdHist call fzf#vim#command_history({'right': '40'})
+"   command! CmdHist call skim#vim#command_history({'right': '40'})
 "   nnoremap q: :CmdHist<CR>
 "
 " " Better search history
-"   command! QHist call fzf#vim#search_history({'right': '40'})
+"   command! QHist call skim#vim#search_history({'right': '40'})
 "   nnoremap q/ :QHist<CR>
 "
-"   command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
+"   command! -bang -nargs=* Ack call skim#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
 "
-"  nmap ,<tab> <plug>(fzf-maps-n)
+"  nmap ,<tab> <plug>(skim-maps-n)
 "
 "
 " end
+
+"Syntastic
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_clojure_checkers = ['joker']
+
+"Clojure filetypes
+
+autocmd BufNewFile,BufRead *.joke set syntax=clojure
