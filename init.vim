@@ -1,4 +1,4 @@
-"let g:python3_host_prog = '/usr/bin/python3.6'
+" let g:python3_host_prog = '/usr/bin/python3.6'
 set rtp+=~/.vim
 
 call plug#begin('~/.vim/plugged')
@@ -6,7 +6,6 @@ call plug#begin('~/.vim/plugged')
 " Plug 'vim-scripts/SpellChecker'
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -52,16 +51,6 @@ Plug 'markwoodhall/vim-sayid'
 Plug 'eraserhd/parinfer-rust', {'do':
       \  'cargo build --release'}
 
-"Check
-"Plug 'neomake/neomake'
-"Plug 'SevereOverfl0w/clojure-check', {'do': './install'}
-"Completion
-
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'clojure-vim/async-clj-omni'
-
-"Themes
-"Plug 'suan/vim-instant-markdown'
 Plug 'chriskempson/base16-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'vim-scripts/twilight'
@@ -89,7 +78,7 @@ nnoremap S <Nop>
 
 
 let mapleader= " "
-let maplocalleader = ","  "optional local leader
+let maplocalleader = " "  "optional local leader
 
 set clipboard+=unnamedplus
 "Vim sneak as vim easymotion
@@ -417,18 +406,11 @@ let vim_markdown_preview_hotkey='<C-m>'
     set shortmess+=c
 
     " CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
-    inoremap <c-c> <ESC>
 
     " When the <Enter> key is pressed while the popup menu is visible, it only
     " hides the menu. Use this mapping to close the menu and also start a new
     " line.
 
-"tab  completion
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
-
-" Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " wrap existing omnifunc
 " Note that omnifunc does not run in background and may probably block the
@@ -463,10 +445,6 @@ au User Ncm2Plugin call ncm2#register_source({
 "Paredit Vars
 "let g:paredit_smartjump=1
 
-
-
-"NERDTree
-nnoremap <F4> :NERDTreeToggle<CR>
 
 "Easier emmet vim
 map <leader>, <C-y>,
@@ -572,6 +550,7 @@ set completeopt=noinsert,menuone,noselect
 " NOTE: you need to install completion sources to get completions. Check
 " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
 "Language servers
+
 let g:LanguageClient_autoStart = 1
 
 let g:LanguageClient_serverCommands = {
@@ -585,14 +564,11 @@ nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gK :call LanguageClient#textDocument_rename()<CR>
 "better white space
 
-
 let g:better_whitespace_ctermcolor='green'
 let g:better_whitespace_guicolor='green'
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
-
-
 
 
 
@@ -629,40 +605,6 @@ nnoremap <silent> <leader>f :FZF  --reverse <cr>
 end
 
 
-
-
-" if executable('sk')
-"
-" "SKIM line earch
-" nnoremap <silent> <leader>r :Rg<cr>
-"
-" "SKIM searchfiles
-" nnoremap <silent> <leader>f :SK -m<cr>
-"
-" " SKIM for open buffers
-"   nnoremap <silent> <leader>b :Buffers<cr>
-"
-" " SKIM for MRU
-"   nnoremap <silent> <leader>m :History<cr>
-"
-" " Use fuzzy completion relative filepaths across directory
-"   imap <expr> <c-x><c-f> skim#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
-"
-" " Better command history with q:
-"   command! CmdHist call skim#vim#command_history({'right': '40'})
-"   nnoremap q: :CmdHist<CR>
-"
-" " Better search history
-"   command! QHist call skim#vim#search_history({'right': '40'})
-"   nnoremap q/ :QHist<CR>
-"
-"   command! -bang -nargs=* Ack call skim#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
-"
-"  nmap ,<tab> <plug>(skim-maps-n)
-"
-"
-" end
-
 "Syntastic
 
 set statusline+=%#warningmsg#
@@ -686,17 +628,39 @@ autocmd BufNewFile,BufRead *.joke set syntax=clojure
 :nmap ,,r <Plug>(grammarous-reset)
 :nmap ,,f <Plug>(grammarous-fixit)
 :nmap ,,a <Plug>(grammarous-fixall)
-" :nmap(grammarous-close-info-window)
-" :nmap(grammarous-remove-error)
-" :nmap(grammarous-disable-rule)
 :nmap ,,e <Plug>(grammarous-move-to-next-error)
 :nmap ,,w <Plug>(grammarous-move-to-previous-error)
 
-"example of lua
+
+
 
 lua <<EOF
     function LuaDoItLua()
         print("testing lua api hello")
     end
 EOF
+
+
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+filetype plugin on
+
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+
+" supress the annoying 'match x of y', 'The only match' and 'Patter not found'
+" messages
+" set shortmess+=c
+
+" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
+inoremap <c-c> <ESC>
+
+" When the <Enter> key is pressed while the popup menu is visible, it only
+" hides the menu. Use this mapping to close the menu and also start a new line
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" use <TAB> to select the popup menu:
+
+
+
 
