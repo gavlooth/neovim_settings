@@ -3,7 +3,8 @@ set rtp+=~/.vim
 
 call plug#begin('~/.vim/plugged')
 "Plug 'JamshedVesuna/vim-markdown-preview'
-Plug 'vim-scripts/SpellChecker'
+" Plug 'vim-scripts/SpellChecker'
+Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
@@ -371,7 +372,7 @@ map <Leader>rv  :source ~/.config/nvim/init.vim<CR>
 map  <leader>e :Eval<CR>
 nmap <leader>c cq
 nmap <leader>q cqq
-
+nmap <leader>d [<C-D>
 
 command! Crepl :Piggieback! (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/cljs-repl))
 
@@ -672,7 +673,29 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_clojure_checkers = ['joker']
+let g:syntastic_loc_list_height=3
 
 "Clojure filetypes
 
 autocmd BufNewFile,BufRead *.joke set syntax=clojure
+
+
+:nmap ,,m <Plug>(grammarous-move-to-info-window   )
+:nmap ,,o <Plug>(grammarous-open-info-window)
+:nmap ,,r <Plug>(grammarous-reset)
+:nmap ,,f <Plug>(grammarous-fixit)
+:nmap ,,a <Plug>(grammarous-fixall)
+" :nmap(grammarous-close-info-window)
+" :nmap(grammarous-remove-error)
+" :nmap(grammarous-disable-rule)
+:nmap ,,e <Plug>(grammarous-move-to-next-error)
+:nmap ,,w <Plug>(grammarous-move-to-previous-error)
+
+"example of lua
+
+lua <<EOF
+    function LuaDoItLua()
+        print("testing lua api hello")
+    end
+EOF
+
