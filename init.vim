@@ -644,6 +644,9 @@ EOF
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
   \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
 filetype plugin on
 
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -661,6 +664,7 @@ inoremap <c-c> <ESC>
 inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 " use <TAB> to select the popup menu:
 
-
+" Conjure
+let g:conjure_log_direction = "horizontal"
 
 
