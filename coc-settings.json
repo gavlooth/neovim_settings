@@ -1,4 +1,7 @@
-   "languageserver": {
+{
+
+
+  "languageserver": {
     "clojure-lsp": {
       "command": "bash",
       "args": ["-c", "clojure-lsp"],
@@ -10,3 +13,4 @@
       }
     }
   }
+}

@@ -20,21 +20,16 @@ Plug 'vimlab/split-term.vim'
 Plug 'lilydjwg/colorizer'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"ncm2
 
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-path'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+
 "Clojure
 " Plug 'vim-scripts/paredit.vim'
 " Plug 'tpope/vim-classpath'
@@ -161,11 +156,6 @@ set undodir=~/.vim/undo
 filetype plugin on
 syntax enable
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#keyword_patterns = {}
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
-let g:deoplete#complete_method='complete'
 
 "Preview autocomplete
 set completeopt-=preview
@@ -249,10 +239,10 @@ let g:airline_symbols.whitespace = 'Ξ'
 
 let g:seoul256_background = 235
 
- colorscheme apprentice
+" colorscheme apprentice
 " colorscheme zenburn
 " colorscheme twilight
-" colorscheme jellybeans
+ colorscheme jellybeans
 " colorscheme colorsbox-stnight
 " colorscheme seoul256
 " colorscheme abstract
@@ -405,45 +395,6 @@ let vim_markdown_preview_hotkey='<C-m>'
     " found' messages
     set shortmess+=c
 
-    " CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
-
-    " When the <Enter> key is pressed while the popup menu is visible, it only
-    " hides the menu. Use this mapping to close the menu and also start a new
-    " line.
-
-
-" wrap existing omnifunc
-" Note that omnifunc does not run in background and may probably block the
-" editor. If you don't want to be blocked by omnifunc too often, you could
-" add 180ms delay before the omni wrapper:
-"  'on_complete': ['ncm2#on_complete#delay', 180,
-"               \ 'ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-au User Ncm2Plugin call ncm2#register_source({
-        \ 'name' : 'css',
-        \ 'priority': 9,
-        \ 'subscope_enable': 1,
-        \ 'scope': ['css','scss'],
-        \ 'mark': 'css',
-        \ 'word_pattern': '[\w\-]+',
-        \ 'complete_pattern': ':\s*',
-        \ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-        \ })
-
-
-"Paredit remaps
-"map <leader>l  <leader>>
-"map <leader>h  <leader><
-"map <localLeader>w  <leader>w(
-"map <localLeader>{  <leader>w{
-"map <localLeader>"  <leader>w"
-"map <localLeader>[  <leader>w[
-"map <leader>s  <leader>S
-"map <leader>o  <leader>O
-"map <leader><leader>h  <leader><Up>
-"map <leader><leader>l  <leader><Down>
-
-"Paredit Vars
-"let g:paredit_smartjump=1
 
 
 "Easier emmet vim
@@ -539,29 +490,13 @@ highlight g1 guibg='#3EA055'
 highlight g2 guibg=#FFF380
 
 highlight g3 guibg=#737CA1
-"Completion (ncm2)
 
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
 
-" IMPORTANTE: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-"Language servers
 
-let g:LanguageClient_autoStart = 1
 
-let g:LanguageClient_serverCommands = {
-    \ 'clojure': ['bash', '-c', 'clojure-lsp'],
-    \ }
-
-nnoremap g<F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> gK :call LanguageClient#textDocument_rename()<CR>
 "better white space
 
 let g:better_whitespace_ctermcolor='green'
@@ -641,15 +576,9 @@ lua <<EOF
 EOF
 
 
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 filetype plugin on
 
-autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
 
 " supress the annoying 'match x of y', 'The only match' and 'Patter not found'
@@ -661,10 +590,44 @@ inoremap <c-c> <ESC>
 
 " When the <Enter> key is pressed while the popup menu is visible, it only
 " hides the menu. Use this mapping to close the menu and also start a new line
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 " use <TAB> to select the popup menu:
 
 " Conjure
 let g:conjure_log_direction = "horizontal"
+
+
+
+ " use <tab> for trigger completion and navigate to the next complete item
+
+let g:coc_global_extensions = ['coc-conjure']
+
+
+ function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+" coc
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+ function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+function! Expand(exp) abort
+    let l:result = expand(a:exp)
+    return l:result ==# '' ? '' : "file://" . l:result
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+vmap <leader><leader>f <Plug>(coc-format-selected)
+nmap <leader><leader>f <Plug>(coc-format-selected)
+
 
 
