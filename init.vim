@@ -25,6 +25,7 @@ Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" Plug "lambdalisue/gina.vim'
 
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -232,7 +233,7 @@ let g:airline_symbols.whitespace = 'Ξ'
  " AirLine Theme
  let g:airline_theme = 'tender'
  let g:airline_left_sep='>'
- let g:airline_theme='badwolf'
+"  let g:airline_theme='badwolf'
 
 
 "Set Colorschemes
@@ -627,7 +628,7 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 vmap <leader><leader>f <Plug>(coc-format-selected)
-nmap <leader><leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
 
 
