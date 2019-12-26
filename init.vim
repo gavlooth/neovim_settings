@@ -25,6 +25,8 @@ Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+
 " Plug "lambdalisue/gina.vim'
 
 
@@ -124,7 +126,8 @@ set scrolloff=8   "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=5
 set nocompatible
-
+set encoding=utf-8
+set fileencoding=utf-8
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
@@ -595,7 +598,7 @@ inoremap <c-c> <ESC>
 
 " Conjure
 let g:conjure_log_direction = "horizontal"
-
+let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 
 
  " use <tab> for trigger completion and navigate to the next complete item
@@ -628,7 +631,8 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 vmap <leader><leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format-selected)
+nmap <leader><leader>f <Plug>(coc-format-selected)
+command! -nargs=0 Format :call CocAction('format')
 
 
 
