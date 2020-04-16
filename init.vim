@@ -1,15 +1,22 @@
 " let g:python3_host_prog = '/usr/bin/python3.6'
+let g:python_host_prog = '/usr/bin/python2.7'
+" /usr/bin/python3.8
+let g:python3_host_prog = '/usr/bin/python3.8'
 set rtp+=~/.vim
 
 call plug#begin('~/.vim/plugged')
 "Plug 'JamshedVesuna/vim-markdown-preview'
-" Plug 'vim-scripts/SpellChecker'
+"Plug 'vim-scripts/SpellChecker'
+
+Plug 'Olical/aniseed', { 'branch': 'develop' }
+
+" Plug 'Olical/conjure', { 'branch': 'develop', 'do': 'bin/compile'  }
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'justinmk/vim-sneak'
+" Plug 'justinmk/vim-sneak'
 Plug 'haya14busa/incsearch.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
@@ -26,12 +33,20 @@ Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
-
+Plug 'dag/vim-fish'
+Plug 'floobits/floobits-neovim'
+" Plug 'https://gitlab.com/HiPhish/neovim.rkt'
+" Plug 'https://github.com/wlangstroth/vim-racket'
+Plug 'https://github.com/jpalardy/vim-slime'
+" Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 " Plug "lambdalisue/gina.vim'
 
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Vim iced
+" Plug 'guns/vim-sexp',    {'for': 'clojure'}
+" Plug 'liquidz/vim-iced', {'for': 'clojure'}
 
 "Clojure
 " Plug 'vim-scripts/paredit.vim'
@@ -40,12 +55,13 @@ Plug 'vim-syntastic/syntastic'
 Plug 'aclaimant/syntastic-joker'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
-"Plug 'tpope/vim-fireplace'
-Plug 'Olical/conjure', { 'tag': 'v2.0.0', 'do': 'bin/compile'  }
+Plug 'tpope/vim-fireplace'
+" Plug 'Olical/conjure'
+
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
 Plug 'guns/vim-clojure-highlight'
-Plug 'markwoodhall/vim-sayid'
+" Plug 'markwoodhall/vim-sayid'
 Plug 'eraserhd/parinfer-rust', {'do':
       \  'cargo build --release'}
 
@@ -60,15 +76,20 @@ Plug 'romainl/Apprentice'
 Plug 'jdsimcoe/abstract.vim'
 Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
-
+Plug 'rafaeldelboni/novum.vim'
 "carp
 Plug 'hellerve/carp-vim'
-
-
 call plug#end()
 
 
-"Set leader to spacebar
+
+" lua << LUA
+" # local api = vim.api
+" vim.api.nvim_command('echo "hello world!"')
+" LUA
+
+
+
 nnoremap <Space> <Nop>
 nnoremap Q <Nop>
 nnoremap s <Nop>
@@ -81,12 +102,12 @@ let maplocalleader = " "  "optional local leader
 set clipboard+=unnamedplus
 "Vim sneak as vim easymotion
 "let g:sneak#streak = 1
-let g:sneak#label = 1
+" let g:sneak#label = 1
 "Vim sneak one character sneak
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
+" map f <Plug>Sneak_f
+" map F <Plug>Sneak_F
+" map t <Plug>Sneak_t
+" map T <Plug>Sneak_T
 
 
 "Max characters per line
@@ -128,7 +149,7 @@ set sidescroll=5
 set nocompatible
 set encoding=utf-8
 set fileencoding=utf-8
-
+compiler fish
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
   nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
@@ -182,8 +203,6 @@ nnoremap <leader>n <C-w>w
 
 "parinfer
 
-nnoremap ,, :ParinferToggleMode<CR>
-nnoremap ,<leader> :ParinferOff<CR>
 
 "Formt clj & cljs files
 " command! Fmt  :w | silent !cljfmt  --edn=/home/heefoo/.config/nvim/cljfmt.edn  %
@@ -197,6 +216,7 @@ nnoremap ,<leader> :ParinferOff<CR>
 if (has("termguicolors"))
  set termguicolors
 endif
+
 "Format json
 command! Fmjson  :%!jq .
 
@@ -234,9 +254,9 @@ let g:airline_symbols.whitespace = 'Ξ'
  let g:airline_symbols.linenr = ''
 
  " AirLine Theme
- let g:airline_theme = 'tender'
+"  let g:airline_theme = 'tender'
  let g:airline_left_sep='>'
-"  let g:airline_theme='badwolf'
+ let g:airline_theme='badwolf'
 
 
 "Set Colorschemes
@@ -244,18 +264,19 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:seoul256_background = 235
 
 " colorscheme apprentice
-" colorscheme zenburn
 " colorscheme twilight
- colorscheme jellybeans
 " colorscheme colorsbox-stnight
 " colorscheme seoul256
 " colorscheme abstract
 " colorscheme anderson
+" colorscheme novum
+colorscheme jellybeans
+
 " colorscheme zenburn
 
  highlight Cursor guifg=white guibg= steelblue
- highlight iCursor guifg=white guibg= #DECAB0
- highlight CursorLine  ctermbg=black  guibg=#2B1B17
+highlight iCursor guifg=white guibg= #DECAB0
+highlight CursorLine  ctermbg=black  guibg=#2B1B17
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
 set guicursor+=n-v-c:blinkon0
@@ -479,13 +500,10 @@ endfunction
 
 command -range=% -nargs=* S <line1>,<line2>!perl -p -e  <args>
 
-command -range=% -nargs=* Sp execute "normal mp" | <line1>,<line2>!perl -p -e  <args> | execute 'normal `p'
+" command -range=% -nargs=* Sp execute "normal mp" | <line1>,<line2>!perl -p -e  <args> | execute 'normal `p'
+" command -range -nargs=1 S1 call s:Substitute(<line1>, <line2>, <q-args>)
 
-command -range -nargs=1 S1 call s:Substitute(<line1>, <line2>, <q-args>)
 
-
-nnoremap ,, :ParinferToggleMode<CR>
-nnoremap ,<leader> :ParinferOff<CR>
 
 "highlights
 
@@ -572,15 +590,6 @@ autocmd BufNewFile,BufRead *.joke set syntax=clojure
 
 
 
-
-lua <<EOF
-    function LuaDoItLua()
-        print("testing lua api hello")
-    end
-EOF
-
-
-
 filetype plugin on
 
 set completeopt=noinsert,menuone,noselect
@@ -630,9 +639,46 @@ endfunction
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
-vmap <leader><leader>f <Plug>(coc-format-selected)
-nmap <leader><leader>f <Plug>(coc-format-selected)
+vmap <leader><leader>,f <Plug>(coc-format-selected)
+nmap <leader><leader>,f <Plug>(coc-format-selected)
 command! -nargs=0 Format :call CocAction('format')
 
+function! ParinferToggleMode() abort
+  if g:parinfer_mode ==  "smart"
+    let g:parinfer_mode = "paren"
+  elseif g:parinfer_mode ==  "paren"
+    let g:parinfer_mode = "indent"
+  elseif g:parinfer_mode ==  "indent"
+    let g:parinfer_mode = "smart"
+  endif
+endfunction
 
 
+function! ToggleParenMode()
+  if g:parinfer_mode ==  "smart"
+    let g:parinfer_mode = "paren"
+  elseif g:parinfer_mode ==  "paren"
+    let g:parinfer_mode = "smart"
+  endif
+endfunction
+
+
+command! ToggleParenMode call ToggleParenMode()
+nnoremap <leader>,  :ToggleParenMode<cr>
+
+
+nmap <silent> <C-c> <Plug>(coc-cursors-position)
+nmap <silent> <C-x> <Plug>(coc-cursors-word)
+xmap <silent> <C-x> <Plug>(coc-cursors-range)
+" use normal command like `<leader>xi(`
+nmap <leader>x  <Plug>(coc-cursors-operator)
+
+let g:slime_target = "tmux"
+
+" Let g:slime_target = "neovim"
+
+let  g:syntastic_enable_racket_racket_checker=1
+
+" For vim iced
+let g:sexp_enable_insert_mode_mappings = 0
+let g:iced_enable_default_key_mappings = v:true
