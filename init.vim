@@ -4,6 +4,21 @@ set rtp+=~/.vim
 call plug#begin('~/.vim/plugged')
 "Plug 'JamshedVesuna/vim-markdown-preview'
 " Plug 'vim-scripts/SpellChecker'
+
+ function! BuildComposer(info)
+  if a:info.status != 'unchanged' || a:info.force
+    if has('nvim')
+      !cargo build --release --locked
+    else
+      !cargo build --release --locked --no-default-features --features json-rpc
+    endif
+  endif
+endfunction
+
+
+
+
+
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
@@ -20,13 +35,17 @@ Plug 'vimlab/split-term.vim'
 Plug 'lilydjwg/colorizer'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
+Plug 'habamax/vim-asciidoctor'
+Plug 'jiangmiao/auto-pairs'
 
+Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 " Plug "lambdalisue/gina.vim'
 
 
@@ -36,12 +55,15 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Clojure
 " Plug 'vim-scripts/paredit.vim'
 " Plug 'tpope/vim-classpath'
+Plug 'rust-lang/rust.vim'
+
 Plug 'vim-syntastic/syntastic'
 Plug 'aclaimant/syntastic-joker'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
-"Plug 'tpope/vim-fireplace'
-Plug 'Olical/conjure', { 'tag': 'v2.0.0', 'do': 'bin/compile'  }
+" Plug 'tpope/vim-fireplace'
+" Plug 'Olical/conjure', { 'tag': 'v2.0.0', 'do': 'bin/compile'  }
+Plug 'Olical/conjure', {'branch': 'develop'}
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
 Plug 'guns/vim-clojure-highlight'
@@ -182,8 +204,8 @@ nnoremap <leader>n <C-w>w
 
 "parinfer
 
-nnoremap ,, :ParinferToggleMode<CR>
-nnoremap ,<leader> :ParinferOff<CR>
+" nnoremap ,, :ParinferToggleMode<CR>
+" nnoremap ,<leader> :ParinferOff<CR>
 
 "Formt clj & cljs files
 " command! Fmt  :w | silent !cljfmt  --edn=/home/heefoo/.config/nvim/cljfmt.edn  %
@@ -234,7 +256,7 @@ let g:airline_symbols.whitespace = 'Ξ'
  let g:airline_symbols.linenr = ''
 
  " AirLine Theme
- let g:airline_theme = 'tender'
+ let g:airline_theme = 'jellybeans'
  let g:airline_left_sep='>'
 "  let g:airline_theme='badwolf'
 
@@ -484,10 +506,21 @@ command -range=% -nargs=* Sp execute "normal mp" | <line1>,<line2>!perl -p -e  <
 command -range -nargs=1 S1 call s:Substitute(<line1>, <line2>, <q-args>)
 
 
-nnoremap ,, :ParinferToggleMode<CR>
-nnoremap ,<leader> :ParinferOff<CR>
+function ParinferToggleMode()
+  if  g:parinfer_mode  == "smart"
+    let g:parinfer_mode = "indent"
+  elseif  g:parinfer_mode  == "indent"
+    let g:parinfer_mode = "insert"
+  elseif  g:parinfer_mode  == "insert"
+    let g:parinfer_mode = "off"
+  else
+    let g:parinfer_mode = "smart"
+  endif
+  echo "Mode is now : " g:parinfer_mode
+endfunction
 
-"highlights
+
+nnoremap ,, :call ParinferToggleMode()<CR>
 
 highlight g1 guibg='#3EA055'
 
@@ -634,5 +667,43 @@ vmap <leader><leader>f <Plug>(coc-format-selected)
 nmap <leader><leader>f <Plug>(coc-format-selected)
 command! -nargs=0 Format :call CocAction('format')
 
+" Transparent floating windows
+set pumblend=50
 
 
+
+" asciidoctor
+let g:asciidoctor_executable = 'asciidoctor'
+
+" Function to create buffer local mappings and add default compiler
+fun! AsciidoctorMappings()
+    nnoremap <buffer> <leader>oo :AsciidoctorOpenRAW<CR>
+    nnoremap <buffer> <leader>op :AsciidoctorOpenPDF<CR>
+    nnoremap <buffer> <leader>oh :AsciidoctorOpenHTML<CR>
+    " nnoremap <buffer> <leader>ox :AsciidoctorOpenDOCX<CR>
+    nnoremap <buffer> <leader>ch :Asciidoctor2HTML<CR>
+    nnoremap <buffer> <leader>cp :Asciidoctor2PDF<CR>
+    " nnoremap <buffer> <leader>cx :Asciidoctor2DOCX<CR>
+    nnoremap <buffer> <leader>p :AsciidoctorPasteImage<CR>
+    " :make will build pdfs
+    compiler asciidoctor2pdf
+endfun
+
+" Call AsciidoctorMappings for all `*.adoc` and `*.asciidoc` files
+augroup asciidoctor
+    au!
+    au BufEnter *.adoc,*.asciidoc call AsciidoctorMappings()
+augroup END
+
+"let g:conjure_config = {"log.hud.enabled?": v:false}`
+let g:AutoPairsShortcutToggle = ',a'
+
+augroup filetypedetect
+ au BufRead,BufNewFile *.mustache set filetype=html
+ au BufRead,BufNewFile *.dst set filetype=clojure
+
+au Filetype clojure let g:AutoPairs = {}
+au Filetype lisp let g:AutoPairs = {}
+
+" autocmd FileType java let b:dispatch = 'javac %'
+" b:AutoPairs = {"(": ")"}
