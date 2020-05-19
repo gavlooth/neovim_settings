@@ -1,6 +1,4 @@
-" let g:python3_host_prog = '/usr/bin/python3.6'
 set rtp+=~/.vim
-
 call plug#begin('~/.vim/plugged')
 "Plug 'JamshedVesuna/vim-markdown-preview'
 " Plug 'vim-scripts/SpellChecker'
@@ -14,9 +12,6 @@ call plug#begin('~/.vim/plugged')
     endif
   endif
 endfunction
-
-
-
 
 
 Plug 'rhysd/vim-grammarous'
@@ -35,10 +30,22 @@ Plug 'vimlab/split-term.vim'
 Plug 'lilydjwg/colorizer'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
 Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
+
+
+Plug 'ncm2/ncm2'
+Plug 'ncm2/float-preview.nvim'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
@@ -46,15 +53,11 @@ Plug 'habamax/vim-asciidoctor'
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-" Plug "lambdalisue/gina.vim'
 
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
-"Clojure
-" Plug 'vim-scripts/paredit.vim'
-" Plug 'tpope/vim-classpath'
+
 Plug 'rust-lang/rust.vim'
 
 Plug 'vim-syntastic/syntastic'
@@ -62,15 +65,12 @@ Plug 'aclaimant/syntastic-joker'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
 " Plug 'tpope/vim-fireplace'
-" Plug 'Olical/conjure', { 'tag': 'v2.0.0', 'do': 'bin/compile'  }
-Plug 'Olical/conjure', {'branch': 'develop'}
+Plug 'Olical/conjure', {'tag': 'v3.0.0'}
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
 Plug 'guns/vim-clojure-highlight'
-Plug 'markwoodhall/vim-sayid'
 Plug 'eraserhd/parinfer-rust', {'do':
-      \  'cargo build --release'}
-
+        \  'cargo build --release'}
 Plug 'chriskempson/base16-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'vim-scripts/twilight'
@@ -375,16 +375,16 @@ map <Leader>rv  :source ~/.config/nvim/init.vim<CR>
 
 "Fireplace binding
 
-map  <leader>e :Eval<CR>
-nmap <leader>c cq
-nmap <leader>q cqq
-nmap <leader>d [<C-D>
+" map  <leader>e :Eval<CR>
+" nmap <leader>c cq
+" nmap <leader>q cqq
+" nmap <leader>d [<C-D>
 
-command! Crepl :Piggieback! (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/cljs-repl))
+" command! Crepl :Piggieback! (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/cljs-repl))
 
-command! WeaselRepl :Piggieback (weasel.repl.websocket/repl-env :ip "0.0.0.0" :port 9001)
+" command! WeaselRepl :Piggieback (weasel.repl.websocket/repl-env :ip "0.0.0.0" :port 9001)
 
-command! Frepl :Piggieback (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/repl-env))
+" command! Frepl :Piggieback (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/repl-env))
 
 "Matchtags always filetypes
 let g:mta_filetypes = {
@@ -547,16 +547,16 @@ let g:strip_whitespace_confirm=0
 if executable('fzf')
 
 "FZF line search
-nnoremap <silent> <leader>r :Rg<cr>
+nnoremap <silent> ,r :Rg<cr>
 
 "FZF search files
-nnoremap <silent> <leader>f :FZF  --reverse <cr>
+nnoremap <silent> ,f :FZF  --reverse <cr>
 
 " FZF for open buffers
-  nnoremap <silent> <leader>b :Buffers<cr>
+  nnoremap <silent> ,b :Buffers<cr>
 
 " FZF for MRU
-  nnoremap <silent> <leader>m :History<cr>
+  nnoremap <silent> ,m :History<cr>
 
 " Use fuzzy completion relative filepaths across directory
   imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
@@ -595,22 +595,14 @@ let g:syntastic_loc_list_height=3
 autocmd BufNewFile,BufRead *.joke set syntax=clojure
 
 
-:nmap ,,m <Plug>(grammarous-move-to-info-window   )
-:nmap ,,o <Plug>(grammarous-open-info-window)
-:nmap ,,r <Plug>(grammarous-reset)
-:nmap ,,f <Plug>(grammarous-fixit)
-:nmap ,,a <Plug>(grammarous-fixall)
-:nmap ,,e <Plug>(grammarous-move-to-next-error)
-:nmap ,,w <Plug>(grammarous-move-to-previous-error)
+nmap ,,m <Plug>(grammarous-move-to-info-window   )
+nmap ,,o <Plug>(grammarous-open-info-window)
+nmap ,,r <Plug>(grammarous-reset)
+nmap ,,f <Plug>(grammarous-fixit)
+nmap ,,a <Plug>(grammarous-fixall)
+nmap ,,e <Plug>(grammarous-move-to-next-error)
+nmap ,,w <Plug>(grammarous-move-to-previous-error)
 
-
-
-
-lua <<EOF
-    function LuaDoItLua()
-        print("testing lua api hello")
-    end
-EOF
 
 
 
@@ -629,31 +621,16 @@ inoremap <c-c> <ESC>
 " hides the menu. Use this mapping to close the menu and also start a new line
 " use <TAB> to select the popup menu:
 
-" Conjure
+" Conjure   bindings, custom
 let g:conjure_log_direction = "horizontal"
 let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
-
-
- " use <tab> for trigger completion and navigate to the next complete item
-
-let g:coc_global_extensions = ['coc-conjure']
-
+command! Req :%ConjureEval
+command! Solr :ConjureConnect 7888
+command!  Conj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
 
  function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-" coc
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
- function! s:show_documentation()
-  if &filetype == 'vim'
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
 endfunction
 
 function! Expand(exp) abort
@@ -661,14 +638,9 @@ function! Expand(exp) abort
     return l:result ==# '' ? '' : "file://" . l:result
 endfunction
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-vmap <leader><leader>f <Plug>(coc-format-selected)
-nmap <leader><leader>f <Plug>(coc-format-selected)
-command! -nargs=0 Format :call CocAction('format')
 
 " Transparent floating windows
-set pumblend=50
+set pumblend=95
 
 
 
@@ -705,5 +677,47 @@ augroup filetypedetect
 au Filetype clojure let g:AutoPairs = {}
 au Filetype lisp let g:AutoPairs = {}
 
+function! GetNreplPort()
+
+endfunction
+
+
+
 " autocmd FileType java let b:dispatch = 'javac %'
 " b:AutoPairs = {"(": ")"}
+if bufwinnr(1)
+  map + <C-W>+
+  map - <C-W>-
+endif
+
+let g:LanguageClient_serverCommands = {
+      \ 'clojure' :  ['bash', '-c', 'clojure-lsp' ],
+      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+      \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+
+ " suppress the annoying 'match x of y', 'The only match' and 'Pattern not
+    " found' messages
+    set shortmess+=c
+
+    " CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
+    inoremap <c-c> <ESC>
+
+    " When the <Enter> key is pressed while the popup menu is visible, it only
+    " hides the menu. Use this mapping to close the menu and also start a new
+    " line.
+    inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+    " Use <TAB> to select the popup menu:
+    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+
+    " enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+set completeopt=noinsert,menuone,noselect
