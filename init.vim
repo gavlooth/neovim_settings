@@ -14,6 +14,22 @@ call plug#begin('~/.vim/plugged')
 endfunction
 
 
+function! Cc()
+  let buffers = map(copy(getbufinfo()), 'v:val.bufnr')
+  for bf in buffers
+    let l:cnlog = bufname(bf)
+    let matchs = matchstr(l:cnlog, ".*njure-log.*")
+    if matchs == ''
+    else
+      let l:bufnr = bufnr('')
+       execute 'noautocmd keepalt buffer' bf
+       execute  'ColorHighlight'
+       execute 'noautocmd keepalt buffer' l:bufnr
+    endif
+  endfor
+endfunction
+
+
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
@@ -27,7 +43,11 @@ Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
 Plug 'Valloric/MatchTagAlways'
 Plug 'vimlab/split-term.vim'
-Plug 'lilydjwg/colorizer'
+" Plug 'lilydjwg/colorizer'
+Plug 'chrisbra/Colorizer'
+Plug 'powerman/vim-plugin-AnsiEsc'
+
+
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
 
@@ -38,6 +58,9 @@ Plug 'wakatime/vim-wakatime'
 
 Plug 'ncm2/ncm2'
 Plug 'ncm2/float-preview.nvim'
+
+" Plug 'neovim/nvim-lsp'
+
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -52,6 +75,8 @@ Plug 'airblade/vim-rooter'
 Plug 'habamax/vim-asciidoctor'
 Plug 'jiangmiao/auto-pairs'
 
+Plug 'norcalli/nvim-terminal.lua'
+
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 
@@ -64,7 +89,9 @@ Plug 'vim-syntastic/syntastic'
 Plug 'aclaimant/syntastic-joker'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
+
 " Plug 'tpope/vim-fireplace'
+
 Plug 'Olical/conjure', {'tag': 'v3.0.0'}
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
@@ -74,6 +101,8 @@ Plug 'eraserhd/parinfer-rust', {'do':
 Plug 'chriskempson/base16-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'vim-scripts/twilight'
+
+Plug 'vim-scripts/phd'
 Plug 'junegunn/seoul256.vim'
 Plug 'mkarmona/colorsbox'
 Plug 'joshdick/onedark.vim'
@@ -82,8 +111,10 @@ Plug 'romainl/Apprentice'
 Plug 'jdsimcoe/abstract.vim'
 Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
+Plug 'dylon/vim-antlr'
 
 "carp
+
 Plug 'hellerve/carp-vim'
 
 
@@ -267,8 +298,8 @@ let g:seoul256_background = 235
 
 " colorscheme apprentice
 " colorscheme zenburn
-" colorscheme twilight
- colorscheme jellybeans
+ colorscheme twilight
+"  colorscheme jellybeans
 " colorscheme colorsbox-stnight
 " colorscheme seoul256
 " colorscheme abstract
@@ -624,9 +655,9 @@ inoremap <c-c> <ESC>
 " Conjure   bindings, custom
 let g:conjure_log_direction = "horizontal"
 let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
-command! Req :%ConjureEval
-command! Solr :ConjureConnect 7888
-command!  Conj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
+" command! Req :%ConjureEval
+command! Sl :ConjureConnect 7888
+command!  Cj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
 
  function! s:check_back_space() abort
   let col = col('.') - 1
@@ -646,6 +677,8 @@ set pumblend=95
 
 " asciidoctor
 let g:asciidoctor_executable = 'asciidoctor'
+
+let g:asciidoctor_extensions = ['asciidoctor-mathematical' ,'asciidoctor-diagram', 'asciidoctor-rouge']
 
 " Function to create buffer local mappings and add default compiler
 fun! AsciidoctorMappings()
@@ -682,9 +715,6 @@ function! GetNreplPort()
 endfunction
 
 
-
-" autocmd FileType java let b:dispatch = 'javac %'
-" b:AutoPairs = {"(": ")"}
 if bufwinnr(1)
   map + <C-W>+
   map - <C-W>-
@@ -697,7 +727,7 @@ let g:LanguageClient_serverCommands = {
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent> <leader>R  :call LanguageClient#textDocument_rename()<CR>
 
 
  " suppress the annoying 'match x of y', 'The only match' and 'Pattern not
@@ -721,3 +751,20 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 autocmd BufEnter * call ncm2#enable_for_buffer()
 
 set completeopt=noinsert,menuone,noselect
+
+highlight Comment ctermfg=green guifg=#905724
+
+" highlight Comment ctermfg=green guifg=#8B733A
+
+" highlight Comment ctermfg=green guifg=#8E1D13
+" autocmd BufRead,BufReadPost conjure-log-* setlocal conceallevel=2
+" autocmd BufRead,BufReadPost conjure-log-* AnsiEsc
+" autocmd  BufNewFile,Bufnew,BufWritePost,BufWrite,BufRead,BufEnter,BufLeave,WinEnter,WinLeave,WinNew,TextChanged,TextChangedI conjure-log-*,*.css,*.scss ColorHighlight
+
+let g:colorizer_auto_color = 1
+let g:colorizer_auto_filetype='clojure,css,html'
+let g:colorizer_disable_bufleave = 1
+
+
+
+
