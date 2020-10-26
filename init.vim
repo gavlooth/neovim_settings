@@ -59,13 +59,6 @@ Plug 'wakatime/vim-wakatime'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/float-preview.nvim'
 
-" Plug 'neovim/nvim-lsp'
-
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 
@@ -81,6 +74,7 @@ Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 
 
+Plug 'neovim/nvim-lsp'
 
 
 Plug 'rust-lang/rust.vim'
@@ -116,7 +110,15 @@ Plug 'dylon/vim-antlr'
 "carp
 
 Plug 'hellerve/carp-vim'
+"Haskell
 
+
+Plug 'neovimhaskell/haskell-vim'
+
+Plug 'owickstrom/neovim-ghci'
+" Plug 'parsonsmatt/intero-neovim'
+" plug 'alx741/vim-stylishask'
+" Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 call plug#end()
 
@@ -671,7 +673,8 @@ endfunction
 
 
 " Transparent floating windows
-set pumblend=95
+set pumblend=10
+hi PmenuSel blend=0
 
 
 
@@ -720,10 +723,10 @@ if bufwinnr(1)
   map - <C-W>-
 endif
 
-let g:LanguageClient_serverCommands = {
-      \ 'clojure' :  ['bash', '-c', 'clojure-lsp' ],
-      \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-      \ }
+" let g:LanguageClient_serverCommands = {
+"       \ 'clojure' :  ['bash', '-c', 'clojure-lsp' ],
+"       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"       \ }
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
@@ -766,5 +769,84 @@ let g:colorizer_auto_filetype='clojure,css,html'
 let g:colorizer_disable_bufleave = 1
 
 
+lua << EOF
+local nvim_lsp = require'nvim_lsp'
+local configs = require'nvim_lsp/configs'
+-- Check if it's already defined for when I reload this file.
+if not nvim_lsp.clojure_lsp then
+  configs.clojure_lsp = {
+    default_config = {
+      cmd = {'/usr/bin/clojure-lsp'};
+      filetypes = {'clojure'};
+      root_dir = function(fname)
+        return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+      end;
+      settings = {};
+    };
+  }
+end
+nvim_lsp.clojure_lsp.setup{}
+
+if not nvim_lsp.haskell_lsp then
+  configs.haskell_lsp = {
+    default_config = {
+      cmd = {'/usr/bin/hie-wrapper', '--lsp'};
+      filetypes = {'hs','lhs','haskell'};
+      root_dir = function(fname)
+        return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+      end;
+      settings = {};
+    };
+  }
+end
+nvim_lsp.haskell_lsp.setup{}
+
+EOF
+
+ augroup ghciMaps
+  au!
+  " Maps for ghci. Restrict to Haskell buffers so the bindings don't collide.
+
+  " Background process and window management
+  au FileType haskell nnoremap <silent> <leader>gs :GhciStart<CR>
+  au FileType haskell nnoremap <silent> <leader>gk :GhciKill<CR>
+
+  " Restarting GHCi might be required if you add new dependencies
+  au FileType haskell nnoremap <silent> <leader>gr :GhciRestart<CR>
+
+  " Open GHCi split horizontally
+  au FileType haskell nnoremap <silent> <leader>go :GhciOpen<CR>
+  " Open GHCi split vertically
+  au FileType haskell nnoremap <silent> <leader>gov :GhciOpen<CR><C-W>H
+  au FileType haskell nnoremap <silent> <leader>gh :GhciHide<CR>
+
+  " RELOADING (PICK ONE):
+
+  " Automatically reload on save
+  au BufWritePost *.hs GhciReload
+  " Manually save and reload
+  " au FileType haskell nnoremap <silent> <leader>wr :w \| :GhciReload<CR>
+
+  " Load individual modules
+  au FileType haskell nnoremap <silent> <leader>gl :GhciLoadCurrentModule<CR>
+  au FileType haskell nnoremap <silent> <leader>gf :GhciLoadCurrentFile<CR>
+augroup END
+
+    " nvim_command [[ silent! r ~/vim/skeletons/start.screen ]]
+" lua << EOF
+"
+" if nvim_command('echo &filetyppe')  = haskell  then
+" end
+" EOF
+
+" Haskell commands
+
+
+" autocmd BufWritePre *.clj lua vim.lsp.buf.formatting_sync(nil, 1000)
+
+" autocmd BufWritePre *.cljs lua vim.lsp.buf.formatting_sync(nil, 1000)
+
+" command!  Hs execute  "GhciStart"
+"ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
 
 
