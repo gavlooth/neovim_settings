@@ -46,6 +46,8 @@ Plug 'vimlab/split-term.vim'
 " Plug 'lilydjwg/colorizer'
 Plug 'chrisbra/Colorizer'
 Plug 'powerman/vim-plugin-AnsiEsc'
+Plug 'nvim-treesitter/nvim-treesitter'
+
 
 
 Plug 'roxma/vim-tmux-clipboard'
@@ -300,10 +302,10 @@ let g:seoul256_background = 235
 
 " colorscheme apprentice
 " colorscheme zenburn
- colorscheme twilight
+"  colorscheme twilight
 "  colorscheme jellybeans
 " colorscheme colorsbox-stnight
-" colorscheme seoul256
+colorscheme seoul256
 " colorscheme abstract
 " colorscheme anderson
 " colorscheme zenburn
