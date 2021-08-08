@@ -29,6 +29,8 @@ function! Cc()
 endfunction
 
 
+Plug 'wlangstroth/vim-racket'
+
 Plug 'vim-syntastic/syntastic'
 Plug 'aclaimant/syntastic-joker'
 Plug 'rhysd/vim-grammarous'
@@ -41,7 +43,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
 Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
-Plug 'Valloric/MatchTagAlways'
+" Plug 'Valloric/MatchTagAlways'
 Plug 'vimlab/split-term.vim'
 " Plug 'lilydjwg/colorizer'
 Plug 'chrisbra/Colorizer'
@@ -128,6 +130,8 @@ call plug#end()
 set spell spelllang=en_us
 hi clear SpellBad
 hi SpellBad cterm=underline
+" hi SpellBad gui=undercurl
+
 
 " Markdown
 let vim_markdown_preview_hotkey='<C-m>'
@@ -420,19 +424,19 @@ end
 "Syntastic
 
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+ set statusline+=%#warningmsg#
+ set statusline+=%{SyntasticStatuslineFlag()}
+ set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+ let g:syntastic_always_populate_loc_list = 0
+ let g:syntastic_auto_loc_list = 0
+ let g:syntastic_check_on_open = 1
+ let g:syntastic_check_on_wq = 0
 
 
-let g:syntastic_loc_list_height = 3
+"  let g:syntastic_loc_list_height = 0
 
-" let g:syntastic_clojure_checkers = ['joker']
+ let g:syntastic_clojure_checkers =['joker']
 
 autocmd BufNewFile,BufRead *.joke set syntax=clojure
 
@@ -451,7 +455,7 @@ let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 command! Sl :ConjureConnect 7888
 command!  Cj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
 
- function! s:check_back_space() abort
+function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
@@ -469,9 +473,9 @@ hi PmenuSel blend=0
 
 
 " asciidoctor
-let g:asciidoctor_executable = 'asciidoctor'
-
-let g:asciidoctor_extensions = ['asciidoctor-mathematical' ,'asciidoctor-diagram', 'asciidoctor-rouge']
+" let g:asciidoctor_executable = 'asciidoctor'
+"
+" let g:asciidoctor_extensions = ['asciidoctor-mathematical' ,'asciidoctor-diagram', 'asciidoctor-rouge']
 
 
 "let g:conjure_config = {"log.hud.enabled?": v:false}`
@@ -638,9 +642,25 @@ command! Sh :ConjureShadowSelect app
     " \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
 
 
- let g:LanguageClient_serverCommands = {
-    \ 'clojure': ['~/.bin/clojure-lsp'],
-    \ }
+
+    let g:LanguageClient_serverCommands = {
+                            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+                            \ 'clojure': ['~/.bin/clojure-lsp'],
+                            \ }
+autocmd BufReadPost *.rs setlocal filetype=rust
+
+" Required for operations modifying multiple buffers like rename.
+set hidden
+
+" Automatically start language servers.
+let g:LanguageClient_autoStart = 1
+
+" Maps K to hover, gd to goto definition, F2 to rename
+
+
+" let g:LanguageClient_serverCommands = { }
+
+
 
 
 nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
@@ -657,3 +677,17 @@ nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missin
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+
+let g:enable_racket_racket_checker=1
+let g:syntastic_enable_racket_racket_checker=1
+
+
+dig l; 0955
+
+dig L; 0923
+nnoremap + :res +5<CR>
+nnoremap - :res -5<CR>
+let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''" }
+
+
