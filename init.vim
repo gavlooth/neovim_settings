@@ -51,6 +51,9 @@ Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 
+Plug 'naegelejd/vim-swig'
+
+
 
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
@@ -95,6 +98,10 @@ Plug 'vim-scripts/twilight'
 Plug 'vim-scripts/phd'
 Plug 'junegunn/seoul256.vim'
 Plug 'mkarmona/colorsbox'
+Plug 'sheerun/vim-wombat-scheme'
+Plug 'twerth/ir_black'
+Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
+
 Plug 'joshdick/onedark.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'romainl/Apprentice'
@@ -122,8 +129,14 @@ Plug 'owickstrom/neovim-ghci'
 " plug 'alx741/vim-stylishask'
 " Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
+"Kotlin
+
+Plug 'udalov/kotlin-vim'
 
 
+"overleaf
+Plug 'da-h/AirLatex.vim', {'do': ':UpdateRemotePlugins'}
+" your login-name
 
 call plug#end()
 " Spell Checking
@@ -534,9 +547,10 @@ let g:colorizer_disable_bufleave = 1
 map + <C-w>>
 map - <C-w><
 
-" colorscheme jellybeans
+colorscheme jellybeans
 
-colorscheme zenburn
+" colorscheme zenburn
+" colorscheme nord
 set expandtab
 vmap ,x :!tidy -q -i --show-errors 0<CR>
 
@@ -642,12 +656,19 @@ command! Sh :ConjureShadowSelect app
     " \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
 
 
+" let g:LanguageClient_serverCommands.c = ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/YOUR_USER/.cache/nvim/ccls", "completion": {"filterAndSort": false}}']
 
-    let g:LanguageClient_serverCommands = {
-                            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-                            \ 'clojure': ['~/.bin/clojure-lsp'],
-                            \ }
+autocmd BufReadPost *.kts setlocal filetype=kotlin
+
+let g:LanguageClient_serverCommands = {
+                                            \ 'kotlin': ["/usr/bin/kotlin-language-server"],
+                                            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+                                            \ 'clojure': ['~/.bin/clojure-lsp'],
+                                            \ 'c': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
+                                            \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
+                                            \ }
 autocmd BufReadPost *.rs setlocal filetype=rust
+
 
 " Required for operations modifying multiple buffers like rename.
 set hidden
@@ -659,8 +680,6 @@ let g:LanguageClient_autoStart = 1
 
 
 " let g:LanguageClient_serverCommands = { }
-
-
 
 
 nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
@@ -686,8 +705,67 @@ let g:syntastic_enable_racket_racket_checker=1
 dig l; 0955
 
 dig L; 0923
+
+
+
+dig e;  0949
+
+
+
+
+
+dig b;         0946
+dig g;         0947
+dig d;         0948
+dig y;         0951
+dig h;         0952
+dig k;         0954
+dig m;         0956
+dig p;         0960
+dig r;         0961
+dig s;         0963
+dig t;         0964
+dig f;         0966
+dig q;         0968
+
 nnoremap + :res +5<CR>
 nnoremap - :res -5<CR>
-let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''" }
+let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""', "'''":"'''" }
 
+
+
+augroup LanguageClient_config
+  au!
+  au BufEnter * let b:Plugin_LanguageClient_started = 0
+  au User LanguageClientStarted setl signcolumn=yes
+  au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
+  au User LanguageClientStopped setl signcolumn=auto
+  au User LanguageClientStopped let b:Plugin_LanguageClient_started = 0
+  au CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
+augroup END
+
+
+
+" let g:LanguageClient_serverCommands = {
+"     \ 'kotlin': ["kotlin-language-server"],
+"     \ }
+
+
+nmap <leader>a :AirLatex<CR>
+
+
+
+let g:AirLatexDomain="www.overleaf.com"
+
+let g:AirLatexUsername="heefoo@outlook.com"
+
+
+
+" highlight Conceal gui=bold,underline cterm=bold,underline guifg=#CCCCFF guibg=red ctermfg=yellow ctermbg=red
+
+highlight Conceal ctermfg=77
+
+highlight SpellBad ctermfg=224   ctermbg='NONE' gui=underline guibg='NONE' guisp=Red
+
+set conceallevel=0
 
