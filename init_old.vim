@@ -29,10 +29,6 @@ function! Cc()
 endfunction
 
 
-Plug 'wlangstroth/vim-racket'
-
-Plug 'vim-syntastic/syntastic'
-Plug 'aclaimant/syntastic-joker'
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
@@ -43,15 +39,12 @@ Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
 Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
-" Plug 'Valloric/MatchTagAlways'
+Plug 'Valloric/MatchTagAlways'
 Plug 'vimlab/split-term.vim'
 " Plug 'lilydjwg/colorizer'
 Plug 'chrisbra/Colorizer'
 Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-
-
-Plug 'naegelejd/vim-swig'
 
 
 
@@ -65,6 +58,7 @@ Plug 'wakatime/vim-wakatime'
 
 Plug 'ncm2/ncm2'
 Plug 'ncm2/float-preview.nvim'
+
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 
@@ -98,10 +92,6 @@ Plug 'vim-scripts/twilight'
 Plug 'vim-scripts/phd'
 Plug 'junegunn/seoul256.vim'
 Plug 'mkarmona/colorsbox'
-Plug 'sheerun/vim-wombat-scheme'
-Plug 'twerth/ir_black'
-Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
-
 Plug 'joshdick/onedark.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'romainl/Apprentice'
@@ -109,12 +99,6 @@ Plug 'jdsimcoe/abstract.vim'
 Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
 Plug 'dylon/vim-antlr'
-
-
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
 
 "carp
 
@@ -129,22 +113,14 @@ Plug 'owickstrom/neovim-ghci'
 " plug 'alx741/vim-stylishask'
 " Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
-"Kotlin
-
-Plug 'udalov/kotlin-vim'
 
 
-"overleaf
-Plug 'da-h/AirLatex.vim', {'do': ':UpdateRemotePlugins'}
-" your login-name
 
 call plug#end()
 " Spell Checking
 set spell spelllang=en_us
 hi clear SpellBad
 hi SpellBad cterm=underline
-" hi SpellBad gui=undercurl
-
 
 " Markdown
 let vim_markdown_preview_hotkey='<C-m>'
@@ -186,7 +162,7 @@ set clipboard=unnamedplus "default register is clipboard register
 set wildmode=longest:full "cmdline full name on tba completion
 set wildignorecase "make cmdline completion ignore case
 set textwidth=0    " Hard-wrap long lines as you type them.
-set signcolumn=yes
+
 set scrolloff=8   "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=5
@@ -436,31 +412,43 @@ end
 
 "Syntastic
 
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+"
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 2
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_clojure_checkers = ['joker']
+" let g:syntastic_loc_list_height=3
+"
 
- set statusline+=%#warningmsg#
- set statusline+=%{SyntasticStatuslineFlag()}
- set statusline+=%*
-
- let g:syntastic_always_populate_loc_list = 0
- let g:syntastic_auto_loc_list = 0
- let g:syntastic_check_on_open = 1
- let g:syntastic_check_on_wq = 0
-
-
-"  let g:syntastic_loc_list_height = 0
-
- let g:syntastic_clojure_checkers =['joker']
 
 autocmd BufNewFile,BufRead *.joke set syntax=clojure
+
+" lua << EOF
+" require'lspconfig'.clojure_lsp.setup{}
+" EOF
+"Clojure filetypes
 
 
 filetype plugin on
 
 set completeopt=noinsert,menuone,noselect
 
+" supress the annoying 'match x of y', 'The only match' and 'Patter not found'
+" messages
+" set shortmess+=c
 
+" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
 inoremap <c-c> <ESC>
 
+" When the <Enter> key is pressed while the popup menu is visible, it only
+" hides the menu. Use this mapping to close the menu and also start a new line
+" use <TAB> to select the popup menu:
+
+" Conjure   bindings, custom
 let g:conjure_log_direction = "horizontal"
 let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 
@@ -468,7 +456,7 @@ let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 command! Sl :ConjureConnect 7888
 command!  Cj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
 
-function! s:check_back_space() abort
+ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
@@ -486,9 +474,9 @@ hi PmenuSel blend=0
 
 
 " asciidoctor
-" let g:asciidoctor_executable = 'asciidoctor'
-"
-" let g:asciidoctor_extensions = ['asciidoctor-mathematical' ,'asciidoctor-diagram', 'asciidoctor-rouge']
+let g:asciidoctor_executable = 'asciidoctor'
+
+let g:asciidoctor_extensions = ['asciidoctor-mathematical' ,'asciidoctor-diagram', 'asciidoctor-rouge']
 
 
 "let g:conjure_config = {"log.hud.enabled?": v:false}`
@@ -510,6 +498,10 @@ if bufwinnr(1)
   map + <C-W>+
   map - <C-W>-
 endif
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <leader>R  :call LanguageClient#textDocument_rename()<CR>
 
 
  " suppress the annoying 'match x of y', 'The only match' and 'Pattern not
@@ -547,10 +539,9 @@ let g:colorizer_disable_bufleave = 1
 map + <C-w>>
 map - <C-w><
 
-colorscheme jellybeans
+" colorscheme jellybeans
 
-" colorscheme zenburn
-" colorscheme nord
+colorscheme zenburn
 set expandtab
 vmap ,x :!tidy -q -i --show-errors 0<CR>
 
@@ -644,128 +635,3 @@ au User Ncm2Plugin call ncm2#register_source({
 cnoreabbrev Prl  %!perl -pi -e
 
 cnoreabbrev Prl1  !perl -pi -e
-
-set laststatus=0
-
-command! Sh :ConjureShadowSelect app
-
-    " \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    " \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    " \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    " \ 'python': ['/usr/local/bin/pyls'],
-    " \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-
-
-" let g:LanguageClient_serverCommands.c = ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/YOUR_USER/.cache/nvim/ccls", "completion": {"filterAndSort": false}}']
-
-autocmd BufReadPost *.kts setlocal filetype=kotlin
-
-let g:LanguageClient_serverCommands = {
-                                            \ 'kotlin': ["/usr/bin/kotlin-language-server"],
-                                            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-                                            \ 'clojure': ['~/.bin/clojure-lsp'],
-                                            \ 'c': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-                                            \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-                                            \ }
-autocmd BufReadPost *.rs setlocal filetype=rust
-
-
-" Required for operations modifying multiple buffers like rename.
-set hidden
-
-" Automatically start language servers.
-let g:LanguageClient_autoStart = 1
-
-" Maps K to hover, gd to goto definition, F2 to rename
-
-
-" let g:LanguageClient_serverCommands = { }
-
-
-nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-nnoremap <silent> cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-nnoremap <silent> crel :call LanguageClient#workspace_executeCommand('expand-let', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missing-libspec', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-
-
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-
-let g:enable_racket_racket_checker=1
-let g:syntastic_enable_racket_racket_checker=1
-
-
-dig l; 0955
-
-dig L; 0923
-
-
-
-dig e;  0949
-
-
-
-
-
-dig b;         0946
-dig g;         0947
-dig d;         0948
-dig y;         0951
-dig h;         0952
-dig k;         0954
-dig m;         0956
-dig p;         0960
-dig r;         0961
-dig s;         0963
-dig t;         0964
-dig f;         0966
-dig q;         0968
-
-nnoremap + :res +5<CR>
-nnoremap - :res -5<CR>
-let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""', "'''":"'''" }
-
-
-
-augroup LanguageClient_config
-  au!
-  au BufEnter * let b:Plugin_LanguageClient_started = 0
-  au User LanguageClientStarted setl signcolumn=yes
-  au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
-  au User LanguageClientStopped setl signcolumn=auto
-  au User LanguageClientStopped let b:Plugin_LanguageClient_started = 0
-  au CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
-augroup END
-
-
-
-" let g:LanguageClient_serverCommands = {
-"     \ 'kotlin': ["kotlin-language-server"],
-"     \ }
-
-
-nmap <leader>a :AirLatex<CR>
-
-
-
-let g:AirLatexDomain="www.overleaf.com"
-
-let g:AirLatexUsername="heefoo@outlook.com"
-
-
-
-" highlight Conceal gui=bold,underline cterm=bold,underline guifg=#CCCCFF guibg=red ctermfg=yellow ctermbg=red
-
-highlight Conceal ctermfg=77
-
-highlight SpellBad ctermfg=224   ctermbg='NONE' gui=underline guibg='NONE' guisp=Red
-
-set conceallevel=0
-
