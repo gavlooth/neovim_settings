@@ -1,0 +1,27 @@
+Description: resize window by id
+    Command: wmctrl -i -r <ID>  -e 0,<left>,<up>,<width>,<height>
+------------------------------
+Description: perl one liner in place change
+    Command: perl -pi -e  's/(.*gpslive\,)(.*)/$2/g' 2.txt
+------------------------------
+Description: perl one liner that concatenates and prints maches
+    Command: perl -ne  '/([^-]*)(.*)/ && print "/home/heefoo/.local/bin/".$1'
+------------------------------
+Description: parallel markdown conversion
+    Command: fd -e md  | parallel pandoc --standalone  --atx-headers --to=asciidoc --output={.}.adoc {}
+------------------------------
+Description: rclone example to google-drive
+    Command: rclone copy Dropbox google-drive:LinuxDocs
+------------------------------
+Description: monitor all trafic on arangodb
+    Command: tcpflow -p -c -i lo port 8529
+------------------------------
+Description: ffmpeg offset video
+    Command: ffmpeg.exe -i "movie.mp4" -itsoffset 3.84 -i "movie.mp4" -map 1:v -map 0:a -c copy "movie-video-delayed.mp4"
+------------------------------
+Description: get haplotype path names
+    Command: odgi paths -i <file> -L
+------------------------------
+Description: extract haplotype paths in range
+    Command: odgi extract -i <file> -p prefix -r <pathName>:<range>
+------------------------------
