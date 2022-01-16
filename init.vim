@@ -114,10 +114,10 @@ Plug 'tlhr/anderson.vim'
 Plug 'dylon/vim-antlr'
 
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
 
 "carp
 
@@ -662,15 +662,15 @@ command! Sh :ConjureShadowSelect app
 " let g:LanguageClient_serverCommands.c = ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/YOUR_USER/.cache/nvim/ccls", "completion": {"filterAndSort": false}}']
 
 autocmd BufReadPost *.kts setlocal filetype=kotlin
-
-let g:LanguageClient_serverCommands = {
-                                            \ 'kotlin': ["/usr/bin/kotlin-language-server"],
-                                            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-                                            \ 'clojure': ['~/.bin/clojure-lsp'],
-                                            \ 'c': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-                                            \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-                                            \ }
-autocmd BufReadPost *.rs setlocal filetype=rust
+"
+" let g:LanguageClient_serverCommands = {
+"                                             \ 'kotlin': ["/usr/bin/kotlin-language-server"],
+"                                             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+"                                             \ 'clojure': ['~/.bin/clojure-lsp'],
+"                                             \ 'c': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
+"                                             \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
+"                                             \ }
+" autocmd BufReadPost *.rs setlocal filetype=rust
 
 
 " Required for operations modifying multiple buffers like rename.
@@ -685,21 +685,21 @@ let g:LanguageClient_autoStart = 1
 " let g:LanguageClient_serverCommands = { }
 
 
-nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-nnoremap <silent> cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-nnoremap <silent> crel :call LanguageClient#workspace_executeCommand('expand-let', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missing-libspec', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-
-
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
+" nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+" nnoremap <silent> cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+" nnoremap <silent> crel :call LanguageClient#workspace_executeCommand('expand-let', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+" nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missing-libspec', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+"
+"
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+"
 
 let g:enable_racket_racket_checker=1
 let g:syntastic_enable_racket_racket_checker=1
@@ -728,15 +728,15 @@ let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""',
 
 
 
-augroup LanguageClient_config
-  au!
-  au BufEnter * let b:Plugin_LanguageClient_started = 0
-  au User LanguageClientStarted setl signcolumn=yes
-  au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
-  au User LanguageClientStopped setl signcolumn=auto
-  au User LanguageClientStopped let b:Plugin_LanguageClient_started = 0
-  au CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
-augroup END
+" augroup LanguageClient_config
+"   au!
+"   au BufEnter * let b:Plugin_LanguageClient_started = 0
+"   au User LanguageClientStarted setl signcolumn=yes
+"   au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
+"   au User LanguageClientStopped setl signcolumn=auto
+"   au User LanguageClientStopped let b:Plugin_LanguageClient_started = 0
+"   au CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
+" augroup END
 
 
 
@@ -745,17 +745,6 @@ augroup END
 "     \ }
 
 
-nmap <leader>a :AirLatex<CR>
-
-
-
-let g:AirLatexDomain="www.overleaf.com"
-
-let g:AirLatexUsername="heefoo@outlook.com"
-
-
-
-" highlight Conceal gui=bold,underline cterm=bold,underline guifg=#CCCCFF guibg=red ctermfg=yellow ctermbg=red
 
 highlight Conceal ctermfg=77
 
@@ -817,3 +806,30 @@ for _, lsp in ipairs(servers) do
 end
 EOF
 
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "maintained",
+
+  -- Install languages synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- List of parsers to ignore installing
+  ignore_install = {  },
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- list of language that will be disabled
+    disable = {  },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
