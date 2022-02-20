@@ -29,10 +29,15 @@ function! Cc()
 endfunction
 
 
+
+
+Plug 'nvim-lua/plenary.nvim'
 Plug 'wlangstroth/vim-racket'
+Plug 'kyazdani42/nvim-web-devicons'
 
-
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'neovim/nvim-lspconfig'
+Plug 'ms-jpq/coq_nvim'
 
 Plug 'vim-syntastic/syntastic'
 Plug 'aclaimant/syntastic-joker'
@@ -46,13 +51,12 @@ Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
 Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
-" Plug 'Valloric/MatchTagAlways'
 Plug 'vimlab/split-term.vim'
-" Plug 'lilydjwg/colorizer'
-Plug 'chrisbra/Colorizer'
+" Plug 'chrisbra/Colorizer'
 Plug 'powerman/vim-plugin-AnsiEsc'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
+" Plug 'Valloric/MatchTagAlways'
+" Plug 'lilydjwg/colorizer'
 
 Plug 'naegelejd/vim-swig'
 
@@ -65,14 +69,16 @@ Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 
+" Plug 'ncm2/ncm2'
+" Plug 'ncm2/float-preview.nvim'
+" Plug 'ncm2/ncm2-bufword'
+" Plug 'ncm2/ncm2-path'
 
-Plug 'ncm2/ncm2'
-Plug 'ncm2/float-preview.nvim'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'junegunn/fzf.vim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'habamax/vim-asciidoctor'
 Plug 'jiangmiao/auto-pairs'
@@ -87,8 +93,8 @@ Plug 'rust-lang/rust.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
 
-
-Plug 'Olical/conjure', {'tag': 'v4.16.0'}
+Plug 'lervag/vimtex'
+Plug 'Olical/conjure' ", {'tag': 'v4.16.0'}
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
 Plug 'guns/vim-clojure-highlight'
@@ -105,6 +111,9 @@ Plug 'sheerun/vim-wombat-scheme'
 Plug 'twerth/ir_black'
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 
+
+
+Plug 'jacoborus/tender.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'romainl/Apprentice'
@@ -112,6 +121,7 @@ Plug 'jdsimcoe/abstract.vim'
 Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
 Plug 'dylon/vim-antlr'
+
 
 
 " Plug 'autozimu/LanguageClient-neovim', {
@@ -124,9 +134,7 @@ Plug 'dylon/vim-antlr'
 Plug 'hellerve/carp-vim'
 "Haskell
 
-
 Plug 'neovimhaskell/haskell-vim'
-
 Plug 'owickstrom/neovim-ghci'
 " Plug 'parsonsmatt/intero-neovim'
 " plug 'alx741/vim-stylishask'
@@ -136,12 +144,14 @@ Plug 'owickstrom/neovim-ghci'
 
 Plug 'udalov/kotlin-vim'
 
-
 "overleaf
+"
+"
 Plug 'da-h/AirLatex.vim', {'do': ':UpdateRemotePlugins'}
 " your login-name
 
 call plug#end()
+
 " Spell Checking
 set spell spelllang=en_us
 hi clear SpellBad
@@ -322,6 +332,10 @@ set virtualedit=all
 
 
 "Show parinfer modes in airline
+"
+"
+
+"
 if (exists('g:parinfer_airline_integration') ? g:parinfer_airline_integration : 1)
   function! ParinferAirline(...)
     if &filetype =~ '.*\(clojure\|scheme\|lisp\|racket\|hy\).*'
@@ -467,6 +481,7 @@ inoremap <c-c> <ESC>
 let g:conjure_log_direction = "horizontal"
 let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 
+
 " command! Req :%ConjureEval
 command! Sl :ConjureConnect 7888
 command!  Cj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
@@ -500,7 +515,12 @@ let g:AutoPairsShortcutToggle = ',a'
 augroup filetypedetect
  au BufRead,BufNewFile *.mustache set filetype=html
  au BufRead,BufNewFile *.dst set filetype=clojure
+ au BufRead,BufNewFile *.rkt set filetype=racket
 
+ au BufRead,BufNewFile *.kts set filetype=kotlin
+"  autocmd BufReadPost *.kts setlocal filetype=kotlin
+
+" au Filetype clojure let g:AutoPairs = {}
 au Filetype clojure let g:AutoPairs = {}
 au Filetype lisp let g:AutoPairs = {}
 
@@ -533,7 +553,7 @@ endif
 
 
     " enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" autocmd BufEnter * call ncm2#enable_for_buffer()
 
 set completeopt=noinsert,menuone,noselect
 
@@ -550,10 +570,11 @@ let g:colorizer_disable_bufleave = 1
 map + <C-w>>
 map - <C-w><
 
-colorscheme jellybeans
-
+" colorscheme jellybeans
 " colorscheme zenburn
 " colorscheme nord
+
+colorscheme tender
 set expandtab
 vmap ,x :!tidy -q -i --show-errors 0<CR>
 
@@ -633,16 +654,16 @@ map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
 
-au User Ncm2Plugin call ncm2#register_source({
-        \ 'name' : 'css',
-        \ 'priority': 9,
-        \ 'subscope_enable': 1,
-        \ 'scope': ['css','scss'],
-        \ 'mark': 'css',
-        \ 'word_pattern': '[\w\-]+',
-        \ 'complete_pattern': ':\s*',
-        \ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-        \ })
+" au User Ncm2Plugin call ncm2#register_source({
+"         \ 'name' : 'css',
+"         \ 'priority': 9,
+"         \ 'subscope_enable': 1,
+"         \ 'scope': ['css','scss'],
+"         \ 'mark': 'css',
+"         \ 'word_pattern': '[\w\-]+',
+"         \ 'complete_pattern': ':\s*',
+"         \ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
+"         \ })
 
 cnoreabbrev Prl  %!perl -pi -e
 
@@ -661,7 +682,7 @@ command! Sh :ConjureShadowSelect app
 
 " let g:LanguageClient_serverCommands.c = ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/YOUR_USER/.cache/nvim/ccls", "completion": {"filterAndSort": false}}']
 
-autocmd BufReadPost *.kts setlocal filetype=kotlin
+
 "
 " let g:LanguageClient_serverCommands = {
 "                                             \ 'kotlin': ["/usr/bin/kotlin-language-server"],
@@ -700,27 +721,36 @@ let g:LanguageClient_autoStart = 1
 " nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 " nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 "
-
 let g:enable_racket_racket_checker=1
 let g:syntastic_enable_racket_racket_checker=1
 
 
-dig l;         0955
-dig L;         0923
-dig e;         0949
-dig b;         0946
-dig g;         0947
-dig d;         0948
-dig y;         0951
-dig h;         0952
-dig k;         0954
-dig m;         0956
-dig p;         0960
-dig r;         0961
-dig s;         0963
-dig t;         0964
-dig f;         0966
-dig q;         0968
+
+
+
+
+
+
+" dig l;         0955
+" dig L;         0923
+" dig e;         0949
+" dig b;         0946
+" dig g;         0947
+" dig d;         0948
+" dig y;         0951
+" dig h;         0951
+"
+" dig 8;         0952
+"
+" dig h;         0942
+" dig k;         0954
+" dig m;         0956
+" dig p;         0960
+" dig r;         0961
+" dig s;         0963
+" dig t;         0964
+" dig f;         0966
+" dig q;         0968
 
 nnoremap + :res +5<CR>
 nnoremap - :res -5<CR>
@@ -753,13 +783,57 @@ highlight SpellBad ctermfg=224   ctermbg='NONE' gui=underline guibg='NONE' guisp
 set conceallevel=0
 
 
+
 lua << EOF
-require'lspconfig'.clojure_lsp.setup{}
+local coq = require "coq" -- add this
+
+
+
+
+
+
+
+
+
+
+require'lspconfig'.clojure_lsp.setup{ coq.lsp_ensure_capabilities{} }
+require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
+require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
+
+vim.cmd([[COQnow]])
+
 EOF
 
- lua << EOF
-local nvim_lsp = require('lspconfig')
 
+lua << EOF
+
+local lspconfig = require 'lspconfig'
+local configs = require 'lspconfig.configs'
+
+local custom_attach = function(client) print("Racket LSP started."); end
+
+if not  configs.racket then
+    configs.racket = {
+        default_config = {
+            cmd = {'/home/heefoo/.local/bin/racket_lsp'},
+            root_dir = lspconfig.util.root_pattern('.git', 'racket'),
+            filetypes = {'racket'},
+            settings = {}
+
+        }
+    }
+end
+
+lspconfig.racket.setup {
+    coq.lsp_ensure_capabilities{} ,
+    on_attach = custom_attach
+}
+
+EOF
+
+
+lua << EOF
+local nvim_lsp = require('lspconfig')
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -804,6 +878,12 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
+
+
+vim.cmd('COQnow -s')
+
+
+
 EOF
 
 
@@ -833,3 +913,71 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+
+" let  g:conjure#client#racket#stdio#command = "racket -I axe"
+
+
+let g:vimtex_view_method = 'zathura'
+
+let g:syntastic_tex_checkers = ['lacheck']
+
+lua <<EOF
+require('telescope').setup {
+    extensions = {
+        fzy_native = {
+            override_generic_sorter = false,
+            override_file_sorter = true,
+        }
+    }
+}
+require('telescope').load_extension('fzy_native')
+EOF
+
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+
+
+" " Using Lua functions
+" nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+" nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+" nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+" nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+"
+"
+autocmd BufNewFile,BufRead *.rkt let g:conjure#log#hud#enabled = v:false
+"
+
+autocmd BufNewFile,BufRead *.rkt let g:conjure#log#trim#to = 100
+
+"
+let g:conjure#log#jump_to_latest#enabled = v:true
+
+
+
+augroup ConjureLog
+  au! BufRead,BufNewFile,BufEnter conjure-log-*.* exe "resize " . (winheight(0) * 3/7)
+augroup END
+
+
+
+" for i in range(65,90)
+"         let c= nr2char(i)
+"         execute 'inoremap    <c-k>' . c . ';' . ' ' .  '<c-k>'  . '*' .  c  . ' '
+"         execute 'inoremap    <c-k>' . tolower(c)  . ';' . ' ' .  '<c-k>'  . '*' .  tolower(c)   . ' '
+" endfor
+
+
+for i in range(65,90)
+        let c= nr2char(i)
+        execute 'inoremap    ,,' . c . ' ' .  '<c-k>'  . '*' .  c  . ' '
+        execute 'inoremap    ,,' . tolower(c)  . ' ' .  '<c-k>'  . '*' .  tolower(c)   . ' '
+endfor
+
+
+let g:conjure#log#trim#to = 500
+let g:conjure#log#trim#at = 100
+
+
