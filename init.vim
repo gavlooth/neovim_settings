@@ -29,7 +29,9 @@ function! Cc()
 endfunction
 
 
+Plug 'quixotique/vim-delta'
 
+" Plug 'vimwiki/vimwiki' , { 'branch': 'dev' }
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'wlangstroth/vim-racket'
@@ -69,13 +71,6 @@ Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
 Plug 'wakatime/vim-wakatime'
 
-" Plug 'ncm2/ncm2'
-" Plug 'ncm2/float-preview.nvim'
-" Plug 'ncm2/ncm2-bufword'
-" Plug 'ncm2/ncm2-path'
-
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" Plug 'junegunn/fzf.vim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
@@ -124,31 +119,20 @@ Plug 'dylon/vim-antlr'
 
 
 
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
-
-"carp
 
 Plug 'hellerve/carp-vim'
 "Haskell
 
 Plug 'neovimhaskell/haskell-vim'
 Plug 'owickstrom/neovim-ghci'
-" Plug 'parsonsmatt/intero-neovim'
-" plug 'alx741/vim-stylishask'
-" Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 "Kotlin
 
 Plug 'udalov/kotlin-vim'
 
-"overleaf
-"
-"
-Plug 'da-h/AirLatex.vim', {'do': ':UpdateRemotePlugins'}
-" your login-name
+Plug 'nvim-lua/popup.nvim'
+
+
 
 call plug#end()
 
@@ -584,6 +568,8 @@ vmap ,x :!tidy -q -i --show-errors 0<CR>
 
 command! Fmjson  :%!jq .
 
+command! Today :r!echo $(date +\%A\%t\%m\%t\%Y)
+
 let g:ctrlp_open_multiple_files = '1r'
 
 "Airline
@@ -799,8 +785,8 @@ local coq = require "coq" -- add this
 require'lspconfig'.clojure_lsp.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
+require'lspconfig'.ccls.setup{ coq.lsp_ensure_capabilities{} }
 
-vim.cmd([[COQnow]])
 
 EOF
 
@@ -872,6 +858,7 @@ end
 local servers = { 'clojure_lsp' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
+     coq.lsp_ensure_capabilities{} ,
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
@@ -879,9 +866,7 @@ for _, lsp in ipairs(servers) do
   }
 end
 
-
-vim.cmd('COQnow -s')
-
+vim.cmd([[COQnow]])
 
 
 EOF
@@ -931,6 +916,10 @@ require('telescope').setup {
     }
 }
 require('telescope').load_extension('fzy_native')
+
+ -- these are all the default values
+
+
 EOF
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -947,7 +936,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 "
 "
-autocmd BufNewFile,BufRead *.rkt let g:conjure#log#hud#enabled = v:false
+" autocmd BufNewFile,BufRead *.rkt let g:conjure#log#hud#enabled = v:false
 "
 
 autocmd BufNewFile,BufRead *.rkt let g:conjure#log#trim#to = 100
@@ -960,6 +949,7 @@ let g:conjure#log#jump_to_latest#enabled = v:true
 augroup ConjureLog
   au! BufRead,BufNewFile,BufEnter conjure-log-*.* exe "resize " . (winheight(0) * 3/7)
 augroup END
+
 
 
 
@@ -979,5 +969,25 @@ endfor
 
 let g:conjure#log#trim#to = 500
 let g:conjure#log#trim#at = 100
+
+
+let g:vimwiki_list = [{'path': '~/.local/share/vimwiki/'}]
+
+ " 🐓 Coq completion settings
+"
+ " Set recommended to false
+ let g:coq_settings = { "keymap.recommended": v:false }
+
+ " Keybindings
+ino <silent><expr> <Esc>   pumvisible() ? "\<C-e><Esc>" : "\<Esc>"
+ino <silent><expr> <C-c>   pumvisible() ? "\<C-e><C-c>" : "\<C-c>"
+ino <silent><expr> <BS>    pumvisible() ? "\<C-e><BS>"  : "\<BS>"
+ino <silent><expr> <CR>    pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"
+ino <silent><expr> <CR>    pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"
+ino <silent><expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+ino <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<BS>"
+
+
+
 
 
