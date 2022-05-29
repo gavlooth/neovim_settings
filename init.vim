@@ -34,7 +34,7 @@ Plug 'quixotique/vim-delta'
 " Plug 'vimwiki/vimwiki' , { 'branch': 'dev' }
 
 Plug 'nvim-lua/plenary.nvim'
-Plug 'wlangstroth/vim-racket'
+" Plug 'wlangstroth/vim-racket'
 Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -63,7 +63,6 @@ Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'naegelejd/vim-swig'
 
 
-
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
 
@@ -82,14 +81,15 @@ Plug 'norcalli/nvim-terminal.lua'
 
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
-Plug 'rust-lang/rust.vim'
+" Plug 'rust-lang/rust.vim'
 
+Plug 'pest-parser/pest.vim'
 
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
 
 Plug 'lervag/vimtex'
-Plug 'Olical/conjure' ", {'tag': 'v4.16.0'}
+Plug 'Olical/conjure' , { 'branch': 'develop' }
 Plug 'guns/vim-clojure-static'
 Plug 'luochen1990/rainbow'
 Plug 'guns/vim-clojure-highlight'
@@ -132,15 +132,18 @@ Plug 'udalov/kotlin-vim'
 
 Plug 'nvim-lua/popup.nvim'
 
+"Rust
+Plug 'simrat39/rust-tools.nvim'
+Plug 'mfussenegger/nvim-dap'
 
+"floating
+Plug 'hood/popui.nvim'
+
+"common lisp
+Plug  'vlime/vlime', {'rtp': 'vim/'}
 
 call plug#end()
 
-" Spell Checking
-set spell spelllang=en_us
-hi clear SpellBad
-hi SpellBad cterm=underline
-" hi SpellBad gui=undercurl
 
 
 " Markdown
@@ -204,6 +207,8 @@ set tm=500
 
 set hlsearch
 let g:incsearch#auto_nohlsearch = 1
+
+autocmd FocusGained * checktime
 
 " For regular expressions turn magic on
 set magic
@@ -322,7 +327,7 @@ set virtualedit=all
 "
 if (exists('g:parinfer_airline_integration') ? g:parinfer_airline_integration : 1)
   function! ParinferAirline(...)
-    if &filetype =~ '.*\(clojure\|scheme\|lisp\|racket\|hy\).*'
+    if &filetype =~ '.*\(clojure\|scheme\|lisp\|hy\).*'
       let w:airline_section_a = g:airline_section_a . ' %{g:parinfer_mode}'
     endif
   endfunction
@@ -499,7 +504,7 @@ let g:AutoPairsShortcutToggle = ',a'
 augroup filetypedetect
  au BufRead,BufNewFile *.mustache set filetype=html
  au BufRead,BufNewFile *.dst set filetype=clojure
- au BufRead,BufNewFile *.rkt set filetype=racket
+"  au BufRead,BufNewFile *.rkt set filetype=racket
 
  au BufRead,BufNewFile *.kts set filetype=kotlin
 "  autocmd BufReadPost *.kts setlocal filetype=kotlin
@@ -555,10 +560,10 @@ map + <C-w>>
 map - <C-w><
 
 " colorscheme jellybeans
-" colorscheme zenburn
+colorscheme zenburn
 " colorscheme nord
 
-colorscheme tender
+" colorscheme tender
 set expandtab
 vmap ,x :!tidy -q -i --show-errors 0<CR>
 
@@ -659,26 +664,6 @@ set laststatus=0
 
 command! Sh :ConjureShadowSelect app
 
-    " \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    " \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    " \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    " \ 'python': ['/usr/local/bin/pyls'],
-    " \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-
-
-" let g:LanguageClient_serverCommands.c = ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/YOUR_USER/.cache/nvim/ccls", "completion": {"filterAndSort": false}}']
-
-
-"
-" let g:LanguageClient_serverCommands = {
-"                                             \ 'kotlin': ["/usr/bin/kotlin-language-server"],
-"                                             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-"                                             \ 'clojure': ['~/.bin/clojure-lsp'],
-"                                             \ 'c': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-"                                             \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log', '--init={"cacheDirectory":"/home/heefoo/.cache/nvim/ccls", "completion": {"filterAndSort": false}}'],
-"                                             \ }
-" autocmd BufReadPost *.rs setlocal filetype=rust
-
 
 " Required for operations modifying multiple buffers like rename.
 set hidden
@@ -686,38 +671,11 @@ set hidden
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
 
-" Maps K to hover, gd to goto definition, F2 to rename
 
 
-" let g:LanguageClient_serverCommands = { }
+ 
 
-
-" nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-" nnoremap <silent> cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-" nnoremap <silent> crel :call LanguageClient#workspace_executeCommand('expand-let', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-" nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missing-libspec', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-"
-"
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-"
-let g:enable_racket_racket_checker=1
-let g:syntastic_enable_racket_racket_checker=1
-
-
-
-
-
-
-
-
-" dig l;         0955
+dig l;         0955
 " dig L;         0923
 " dig e;         0949
 " dig b;         0946
@@ -744,22 +702,10 @@ let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""',
 
 
 
-" augroup LanguageClient_config
-"   au!
-"   au BufEnter * let b:Plugin_LanguageClient_started = 0
-"   au User LanguageClientStarted setl signcolumn=yes
-"   au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
-"   au User LanguageClientStopped setl signcolumn=auto
-"   au User LanguageClientStopped let b:Plugin_LanguageClient_started = 0
-"   au CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
-" augroup END
 
-
-
-" let g:LanguageClient_serverCommands = {
-"     \ 'kotlin': ["kotlin-language-server"],
-"     \ }
-
+let g:LanguageClient_serverCommands = {
+\ 'rust': ['rust-analyzer'],
+\ }
 
 
 highlight Conceal ctermfg=77
@@ -773,49 +719,14 @@ set conceallevel=0
 lua << EOF
 local coq = require "coq" -- add this
 
-
-
-
-
-
-
-
-
-
 require'lspconfig'.clojure_lsp.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.ccls.setup{ coq.lsp_ensure_capabilities{} }
-
-
-EOF
-
-
-lua << EOF
-
-local lspconfig = require 'lspconfig'
-local configs = require 'lspconfig.configs'
-
-local custom_attach = function(client) print("Racket LSP started."); end
-
-if not  configs.racket then
-    configs.racket = {
-        default_config = {
-            cmd = {'/home/heefoo/.local/bin/racket_lsp'},
-            root_dir = lspconfig.util.root_pattern('.git', 'racket'),
-            filetypes = {'racket'},
-            settings = {}
-
-        }
-    }
-end
-
-lspconfig.racket.setup {
-    coq.lsp_ensure_capabilities{} ,
-    on_attach = custom_attach
-}
+require'lspconfig'.rust_analyzer.setup{coq.lsp_ensure_capabilities{}}
 
 EOF
+
 
 
 lua << EOF
@@ -845,6 +756,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
@@ -872,10 +784,10 @@ vim.cmd([[COQnow]])
 EOF
 
 
-lua <<EOF
+lua << EOF
 require'nvim-treesitter.configs'.setup {
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-  ensure_installed = "maintained",
+  ensure_installed = {"clojure", "lua", "rust",  "java",  "kotlin"}  ,
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -890,10 +802,6 @@ require'nvim-treesitter.configs'.setup {
     -- list of language that will be disabled
     disable = {  },
 
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
 }
@@ -929,19 +837,10 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 
 
-" " Using Lua functions
-" nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-" nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
-" nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
-" nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
-"
-"
-" autocmd BufNewFile,BufRead *.rkt let g:conjure#log#hud#enabled = v:false
-"
+autocmd BufNewFile,BufRead *.rkt let g:conjure#log#hud#enabled = v:false
 
 autocmd BufNewFile,BufRead *.rkt let g:conjure#log#trim#to = 100
 
-"
 let g:conjure#log#jump_to_latest#enabled = v:true
 
 
@@ -949,15 +848,6 @@ let g:conjure#log#jump_to_latest#enabled = v:true
 augroup ConjureLog
   au! BufRead,BufNewFile,BufEnter conjure-log-*.* exe "resize " . (winheight(0) * 3/7)
 augroup END
-
-
-
-
-" for i in range(65,90)
-"         let c= nr2char(i)
-"         execute 'inoremap    <c-k>' . c . ';' . ' ' .  '<c-k>'  . '*' .  c  . ' '
-"         execute 'inoremap    <c-k>' . tolower(c)  . ';' . ' ' .  '<c-k>'  . '*' .  tolower(c)   . ' '
-" endfor
 
 
 for i in range(65,90)
@@ -989,5 +879,517 @@ ino <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<BS>"
 
 
 
+" sbcl --eval '(load #P"~/.quicklisp/setup.lisp")' --eval '(ql:quickload :swank)'  --eval '(swank:create-server :dont-close t)'
+
+lua <<EOF
+require('rust-tools').setup({})
+EOF
+
+let g:conjure#filetypes = ['clojure', 'fennel', 'janet', 'hy', 'racket', 'scheme', 'lua']
 
 
+
+
+
+augroup LocalVlimeKeys
+    autocmd!
+     autocmd FileType lisp nnoremap <silent> <buffer> <Leader>ee
+         \ :call vlime#plugin#SendToREPL(vlime#ui#CurExprOrAtom())<cr>
+    
+augroup end
+
+
+        let g:vlime_window_settings = {
+                \ "sldb": {
+                    \ "pos": "botright",
+                    \ "size": 15,
+                    \ "vertical": v:true
+                \ },
+                \ "server": {  "size" : 10 },
+                \ "repl" : { -> {"pos": "belowright", "size": winheight(".") / 5}} ,
+                \ }
+
+
+
+        "sldb"      The debugger window.
+        "repl"      The REPL window.
+        "inspector" The inspector window.
+        "xref"      The cross reference window.
+        "notes"     The compiler notes window.
+        "threads"   The threads window.
+        "preview"   The preview window.
+        "arglist"   The arglist window.
+        "input"     The input buffer window.
+        "server"    The server output window.
+        "trace"     The trace dialog window.
+        "mrepl"     The MREPL window.
+
+" g:vlime_window_settings                      *g:vlime_window_settings*
+"     A |dict| to specify window positions and sizes. Vlime will consult
+"     this variable when creating a new window. The keys should be
+"     Vlime window types, and the values should be |dict|s containing
+"     "pos", "size", and "vertical" parameters. For example:
+
+
+    " These settings will cause the debugger window to be created
+    " on the right, vertically.
+    "
+    " You can also replace the window parameters dict with a |Funcref|
+    " or a |lambda| expression to generate the parameters dynamically:
+    "
+    "     let g:vlime_window_settings = {
+    "             \ "sldb": { -> {"pos": "belowright", "size": winheight(".") / 3}}
+    "         \ }
+    "
+    " With this setting, the debugger window will be one third of the
+    " current window size.
+    "
+    "                                               *vlime-window-types*
+    " Available window types:
+
+        "sldb"      The debugger window.
+        "repl"      The REPL window.
+        "inspector" The inspector window.
+        "xref"      The cross reference window.
+        "notes"     The compiler notes window.
+        "threads"   The threads window.
+        "preview"   The preview window.
+        "arglist"   The arglist window.
+        "input"     The input buffer window.
+        "server"    The server output window.
+        "trace"     The trace dialog window.
+        "mrepl"     The MREPL window.
+
+    " Legal values for the parameters:
+    "
+    "     "pos":
+    "         "aboveleft", "belowright", "topleft", "botright".
+    "         (See |aboveleft| and the alike to get explanations of
+    "         these positions)
+    "     "size":
+    "         Any positive integer, or v:null to tell Vlime not to
+    "         resize the window.
+    "     "vertical":
+    "         v:true or v:false.
+
+
+
+" nnoremap <C-h> <C-w>h
+
+" 4.3.1 CL Source File Mappings                  *vlime-mappings-source*
+"
+" Key mappings available in lisp source files:
+"
+"     Connection Management                        *vlime-mappings-conn*
+"         <LocalLeader>cc                       *vlime-mappings-conn-cc*
+"             Connect to Vlime server.
+"         <LocalLeader>cs                       *vlime-mappings-conn-cs*
+"             Switch Vlime connections. This command shows a list of
+"             connections, and the current connection will be marked
+"             with an asterisk "*" at the end.
+"         <LocalLeader>cd
+"             Disconnect.
+"         <LocalLeader>cR
+"             Rename the current connection.
+"
+"     Server Management                   *vlime-mappings-invoke-server*
+"         <LocalLeader>rr              *vlime-mappings-invoke-server-rr*
+"             Run a new Vlime server and connect to it. To customize the
+"             server, see |g:vlime_cl_impl|.
+"         <LocalLeader>rv
+"             View the console output of the current server.
+"         <LocalLeader>rV
+"             Show a list of Vlime servers and view the console output of the chosen one.
+"         <LocalLeader>rs              *vlime-mappings-invoke-server-rs*
+"             Stop the current server.
+"         <LocalLeader>rS
+"             Show a list of Vlime servers and stop the chosen one.
+"         <LocalLeader>rR
+"             Rename a server.
+"
+"     Sending Stuff To The REPL                    *vlime-mappings-send*
+"         <LocalLeader>ss                       *vlime-mappings-send-ss*
+"             If there's an s-expression under the cursor, send it to
+"             the REPL, else send the atom under the cursor, if any.
+"         <LocalLeader>se
+"             Send the s-expression under the cursor to the REPL.
+"         <LocalLeader>st
+"             Send the top-level s-expression under the cursor to the
+"             REPL.
+"         <LocalLeader>sa
+"             Send the atom under the cursor to the REPL.
+"         <LocalLeader>si
+"             Open an input buffer and compose a snippet to send to the
+"             REPL. See |vlime-input-buffer|.
+"         <LocalLeader>s
+"             (In visual mode) Send the current selection to the REPL.
+"
+"     Expanding Macros                    *vlime-mappings-expand-macros*
+"         <LocalLeader>mm
+"             Expand the macro under the cursor.
+"         <LocalLeader>m1
+"             Expand the macro under the cursor once.
+"         <LocalLeader>ma
+"             Expand the macro under the cursor and all nested macros.
+"
+"     Compiling                                 *vlime-mappings-compile*
+"         <LocalLeader>oe
+"             Compile the form under the cursor.
+"         <LocalLeader>ot
+"             Compile the top-level form under the cursor.
+"         <LocalLeader>of
+"             Compile the current file.
+"         <LocalLeader>o
+"             (In visual mode) Compile the current selection.
+"
+"     Cross References (xref)               *vlime-mappings-invoke-xref*
+"         <LocalLeader>xc                *vlime-mappings-invoke-xref-xc*
+"             Show callers of the function under the cursor.
+"         <LocalLeader>xC
+"             Show callees of the function under the cursor.
+"         <LocalLeader>xr
+"             Show references of the variable under the cursor.
+"         <LocalLeader>xb
+"             Show bindings of the variable under the cursor.
+"         <LocalLeader>xs
+"             Show who sets the value of the variable under the cursor.
+"         <LocalLeader>xe
+"             Show who expands the macro under the cursor.
+"         <LocalLeader>xm
+"             Show specialized methods for the class under the cursor.
+"         <LocalLeader>xd
+"             Show the definition for the name under the cursor.
+"         <LocalLeader>xi
+"             Interactively prompt for the symbol to search. A menu will
+"             pop up, to let you choose from xref types. You can prepend
+"             a count to skip this menu, e.g. "8<LocalLeader>xi" would
+"             look for definitions. See |vlime-input-buffer|.
+"
+"     Describing Things                        *vlime-mappings-describe*
+"         <LocalLeader>do
+"             Describe the "operator" of the s-expression under the
+"             cursor.
+"         <LocalLeader>da
+"             Describe the atom under the cursor.
+"         <LocalLeader>di
+"             Prompt for the symbol to describe. See
+"             |vlime-input-buffer|.
+"         <LocalLeader>ds
+"             Apropos search. An input buffer would pop up, prompting
+"             for the search pattern. See |vlime-input-buffer|.
+"         <LocalLeader>ddo
+"             Show the documentation for the "operator" of the
+"             s-expression under the cursor.
+"         <LocalLeader>dda
+"             Show the documentation for the atom under the cursor.
+"         <LocalLeader>ddi
+"             Show the documentation for the symbol entered in an input
+"             buffer. See |vlime-input-buffer|.
+"         <LocalLeader>dr
+"             Show the arglist for the s-expression under the cursor.
+"
+"     Undefining Things
+"         <LocalLeader>uf
+"             Undefine the function under the cursor.
+"         <LocalLeader>us
+"             Unintern the symbol under the cursor.
+"         <LocalLeader>ui
+"             Interactively prompt for the function/symbol to
+"             undefine/unintern. A menu will pop up, to let you choose
+"             what to do. You can prepend a count to skip this menu,
+"             e.g. "2<LocalLeader>ui" would unintern a symbol. See
+"             |vlime-input-buffer|.
+"
+"     Inspection                       *vlime-mappings-invoke-inspector*
+"         <LocalLeader>II           *vlime-mappings-invoke-inspector-II*
+"             If there's an s-expression under the cursor, evaluate it,
+"             else evaluate the atom under the cursor, if any. The
+"             evaluation result is then shown in the inspector.
+"         <LocalLeader>Ii
+"             Same as <LocalLeader>II
+"         <LocalLeader>IE
+"             Evaluate and inspect the s-expression under the cursor.
+"         <LocalLeader>Ie
+"             Same as <LocalLeader>IE
+"         <LocalLeader>IT
+"             Evaluate and inspect the top-level s-expression under the
+"             cursor.
+"         <LocalLeader>It
+"             Same as <LocalLeader>It
+"         <LocalLeader>IA
+"             Evaluate and inspect the atom under the cursor.
+"         <LocalLeader>Ia
+"             Same as <LocalLeader>IA
+"         <LocalLeader>IN
+"             Prompt for the expression to inspect. See
+"             |vlime-input-buffer|.
+"         <LocalLeader>In
+"             Same as <LocalLeader>IN
+"         <LocalLeader>I
+"             (In visual mode) Evaluate and inspect the current
+"             selection.
+"
+"     Invoking The Trace Dialog     *vlime-mappings-invoke-trace-dialog*
+"         <LocalLeader>TD        *vlime-mappings-invoke-trace-dialog-TD*
+"             Show the trace dialog.
+"         <LocalLeader>Td
+"             Same as <LocalLeader>TD
+"         <LocalLeader>TT
+"             Toggle the traced state of the function name under the
+"             cursor.
+"         <LocalLeader>Tt
+"             Same as <LocalLeader>TT
+"         <LocalLeader>TI
+"             Show an input buffer, and prompt for the name of the
+"             function to be traced. See |vlime-input-buffer|. You can
+"             also trace setf expanders by specifying "(setf <name>)".
+"         <LocalLeader>Ti
+"             Same as <LocalLeader>TI
+"
+"     Closing Windows                      *vlime-mappings-close-window*
+"         <LocalLeader>wp
+"             Close all visible preview windows.
+"         <LocalLeader>wr
+"             Close all visible arglist windows.
+"         <LocalLeader>wn
+"             Close all visible compiler notes windows.
+"         <LocalLeader>wR
+"             Close all visible REPL windows.
+"         <LocalLeader>wA
+"             Close all Vlime windows.
+"         <LocalLeader>wl
+"             Show a list of visible Vlime windows, and choose which to
+"             close.
+"
+"     Other Stuff                                  *vlime-mappings-misc*
+"         <LocalLeader>i                         *vlime-mappings-misc-i*
+"             Interaction Mode. See |vlime-interaction-mode|.
+"         <LocalLeader>l
+"             Load the current file.
+"         <LocalLeader>a
+"             Disassemble the form under the cursor.
+"         <LocalLeader>p                         *vlime-mappings-misc-p*
+"             Specify the package for the current buffer. An input
+"             buffer would pop up for this. See |vlime-input-buffer|.
+"         <LocalLeader>b
+"             Set a breakpoint at entry to a function. An input buffer
+"             would pop up, prompting for the function name. See
+"             |vlime-input-buffer|.
+"         <LocalLeader>t                         *vlime-mappings-misc-t*
+"             Show a list of the running threads. See
+"             |vlime-thread-list|.
+"
+" ......................................................................
+" 4.3.2 REPL Buffer Mappings                       *vlime-mappings-repl*
+"
+" Key mappings avaialble in the REPL buffer:
+"
+"     CTRL-c
+"         Interrupt the REPL thread.
+"     <LocalLeader>ls
+"         Inspect the evaluation result under the cursor.
+"     <LocalLeader>y                             *vlime-mappings-repl-y*
+"         Yank the evaluation result under the cursor into the default
+"         register |quotequote|. Note that this yanked value is an
+"         expression to be evaluated in the same REPL session. It is
+"         meaningless in other contexts.
+"     <LocalLeader>C
+"         Clear the REPL buffer.
+"     <Tab>
+"         Move the cursor to the next prensented object.
+"     CTRL-n
+"         Same as <Tab>.
+"     CTRL-p
+"         Move the cursor to the previous presented object.
+"
+" ......................................................................
+" 4.3.3 Debugger Mappings                      *vlime-mappings-debugger*
+"
+" Key mappings available in the debugger:
+"
+"     <CR>
+"         Choose a restart.
+"     d
+"         Show the details (local variables and source location etc.)
+"         of the frame under the cursor.
+"     S
+"         Jump to the source code for the frame under the cursor. If the
+"         source file is already opened in a window, simply move the
+"         cursor to that window. Otherwise, this command opens the
+"         source file in the current window by default. A count can be
+"         prepended to specify which window to use. For example, "2S"
+"         would open the source file in the second visible window.
+"     T
+"         Like "S", but open the source file in a new tab, if it's not
+"         yet opened in any window. To always create a new tab, prepend
+"         an arbitrary count, such as "1T".
+"     r
+"         Restart the frame under the cursor.
+"     s
+"         Start stepping in the frame under the cursor.
+"     x
+"         Step over the current function call.
+"     o
+"         Step out of the current function.
+"     c
+"         Invoke the restart labeled CONTINUE.
+"     a
+"         Invoke the restart labeled ABORT.
+"     C
+"         Inspect the current condition object.
+"     i                                      *vlime-mappings-debugger-i*
+"         Evaluate and inspect an expression in the frame under the
+"         cursor. An input buffer would pop up, prompting for the
+"         expression. See |vlime-input-buffer|.
+"     e
+"         Evaluate an expression in the frame under the cursor. An input
+"         buffer would pop up, prompting for the expression. See
+"         |vlime-input-buffer|.
+"     E
+"         Evaluate an expression in the frame under the cursor, and then
+"         send the result to the REPL, so that you can yank the value
+"         with |vlime-mappings-repl-y| and further manipulate it. An
+"         input buffer would pop up, prompting for the expression. See
+"         |vlime-input-buffer|.
+"     D
+"         Disassemble the frame under the cursor.
+"     R
+"         Return a manually specified result from the frame under the
+"         cursor. An input buffer would pop up, prompting for the
+"         expression that would generate the result. See
+"         |vlime-input-buffer|.
+"
+" ......................................................................
+" 4.3.4 Inspector Mappings                    *vlime-mappings-inspector*
+"
+" Key mappings avaialble in the inspector:
+"
+"     <CR>
+"         Activate the interactable field/button under the cursor.
+"     <Space>
+"         Same as <CR>
+"     s
+"         Send the value of the field under the cursor to the REPL.
+"     S
+"         Send the value being inspected to the REPL.
+"     <Tab>
+"         Select the next interactable field/button.
+"     CTRL-n
+"         Same as <Tab>
+"     CTRL-p
+"         Select the previous interactable field/button.
+"     p
+"         Return to the previous inspected object.
+"     P
+"         Move to the next inspected object.
+"     R
+"         Refresh the inspector.
+"
+" ......................................................................
+" 4.3.5 XRef List & Compiler Notes Mappings
+"                                                  *vlime-mappings-xref*
+"                                        *vlime-mappings-compiler-notes*
+"
+" Key mappings avaialble in the cross reference list and the compiler
+" notes window:
+"
+"     <CR>
+"         Jump to the selected source location. If the source file is
+"         already opened, simply move the cursor to the window
+"         containing that file. Otherwise, open the source file in the
+"         window where the xref command was initiated. A count can be
+"         prepended to specify which window to use. For example, "2<CR>"
+"         would show the source file in the second visible window.
+"     t
+"         Like <CR>, but open the source file in a new tab, if it's not
+"         yet opened in any window. To always create a new tab, prepend
+"         an arbitrary count, such as "1t".
+"     s
+"         Open the selected source location in a horizontal split
+"         window. A count can be prepended to specify which window to
+"         split.
+"     S
+"         Like "s", but open a vertical split window.
+"
+" ......................................................................
+" 4.3.6 Thread List Mappings                *vlime-mappings-thread-list*
+"
+" Key mappings avaialble in the thread list:
+"
+"     CTRL-c
+"         Interrupt the thread under the cursor. The debugger will be
+"         activated.
+"     K
+"         Kill the thread under the cursor.
+"     D
+"         Invoke the debugger in the thread under the cursor.
+"     r
+"         Refresh the thread list.
+"
+" ......................................................................
+" 4.3.7 Server Output Buffer Mappings            *vlime-mappings-server*
+"
+" Key mappings avaialble in the server output buffer:
+"
+"     <LocalLeader>c                           *vlime-mappings-server-c*
+"         Connect to this server.
+"     <LocalLeader>s
+"         Stop this server.
+"
+" ......................................................................
+" 4.3.8 Input Buffer Mappings                     *vlime-mappings-input*
+"
+" Key mappings avaialble in the input buffer:
+"
+"     CTRL-p or Shift-Tab
+"         Show the previous item in input history.
+"     CTRL-n or Tab
+"         Show the next item in input history.
+"
+" ......................................................................
+" 4.3.9 Trace Dialog Mappings              *vlime-mappings-trace-dialog*
+"
+" Key mappings avaialble in the trace dialog:
+"
+"     <CR>
+"         Activate the interactable field/button under the cursor.
+"     <Space>
+"         Same as <CR>.
+"     s
+"         Send the value of the field under the cursor to the REPL.
+"     i
+"         Inspect the value of the field under the cursor.
+"     <Tab>
+"         Select the next interactable field/button.
+"     CTRL-n
+"         Same as <Tab>.
+"     CTRL-p
+"         Select the previous interactable field/button.
+"     R
+"         Refresh the trace dialog.
+"
+" ......................................................................
+" 4.3.10 MREPL Buffer Mappings                    *vlime-mappings-mrepl*
+"
+" Key mappings avaialble in the MREPL buffer:
+"
+"     <CR>
+"         (In insert mode) Submit the text snippet between the last
+"         prompt and EOF to the REPL.
+"     CTRL-j
+"         (In insert mode) Insert a newline.
+"     <Tab>
+"         (In insert mode) Trigger omni-completion.
+"     CTRL-c
+"         (In insert mode) Interrupt the MREPL thread.
+"     <LocalLeader>C
+"         Clear the MREPL buffer.
+"     <LocalLeader>D
+"         Disconnect from this REPL.
+"
+" ----------------------------------------------------------------------
+"
+"
+
+highlight clear SpellBad
+highlight SpellBad ctermfg=009 ctermbg=011 guifg=#ff0000 guibg=#ffff00
