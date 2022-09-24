@@ -31,7 +31,12 @@ endfunction
 
 Plug 'quixotique/vim-delta'
 
+
+Plug 'bfontaine/zprint.vim'
+
 " Plug 'vimwiki/vimwiki' , { 'branch': 'dev' }
+
+
 
 Plug 'nvim-lua/plenary.nvim'
 " Plug 'wlangstroth/vim-racket'
@@ -141,6 +146,9 @@ Plug 'hood/popui.nvim'
 
 "common lisp
 Plug  'vlime/vlime', {'rtp': 'vim/'}
+
+" Ghost text
+Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
 
 call plug#end()
 
@@ -1393,3 +1401,13 @@ augroup end
 
 highlight clear SpellBad
 highlight SpellBad ctermfg=009 ctermbg=011 guifg=#ff0000 guibg=#ffff00
+
+
+"zprint
+
+" let g:zprint#options_map = '{:search-config? true}'
+
+let g:zprint#options_map = '{:search-config? false :style :indent-only}'
+
+let g:zprint#make_autocmd = v:true
+
