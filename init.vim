@@ -28,11 +28,10 @@ function! Cc()
   endfor
 endfunction
 
-
 Plug 'quixotique/vim-delta'
 
-
 Plug 'axelf4/vim-strip-trailing-whitespace'
+
 " Plug 'bfontaine/zprint.vim'
 
 " Plug 'vimwiki/vimwiki' , { 'branch': 'dev' }
@@ -48,7 +47,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'ms-jpq/coq_nvim'
 
 Plug 'vim-syntastic/syntastic'
-Plug 'aclaimant/syntastic-joker'
+" Plug 'aclaimant/syntastic-joker'
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
@@ -66,6 +65,7 @@ Plug 'powerman/vim-plugin-AnsiEsc'
 " Plug 'Valloric/MatchTagAlways'
 " Plug 'lilydjwg/colorizer'
 
+Plug  'RRethy/vim-hexokinase'
 Plug 'naegelejd/vim-swig'
 
 
@@ -150,8 +150,21 @@ Plug  'vlime/vlime', {'rtp': 'vim/'}
 
 " Ghost text
 Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+" Vim jack int
+Plug 'tpope/vim-dispatch'
+Plug 'clojure-vim/vim-jack-in'
+" Only in Neovim:
+Plug 'radenling/vim-dispatch-neovim'
+
+
+
+Plug 'mfussenegger/nvim-lint'
+
+"vim history
+Plug 'simnalamburt/vim-mundo'
 
 call plug#end()
+
 
 
 
@@ -464,7 +477,7 @@ end
 
 "  let g:syntastic_loc_list_height = 0
 
- let g:syntastic_clojure_checkers =['joker']
+"  let g:syntastic_clojure_checkers =['joker']
 
 autocmd BufNewFile,BufRead *.joke set syntax=clojure
 
@@ -482,7 +495,8 @@ let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 
 " command! Req :%ConjureEval
 command! Sl :ConjureConnect 7888
-command!  Cj execute "ConjureConnect" . system("cat " . FindRootDirectory() .  "/.nrepl-port")
+command!  Cj execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.nrepl-port")
+command!  Chj execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.shadow-cljs/nrepl.port")
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -733,6 +747,7 @@ require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.ccls.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.rust_analyzer.setup{coq.lsp_ensure_capabilities{}}
+
 
 EOF
 
@@ -996,3 +1011,24 @@ let g:zprint#options_map = '{:search-config? false :style :indent-only}'
 
 let g:zprint#make_autocmd = v:true
 
+
+let g:cssColorVimDoNotMessMyUpdatetime = 1
+
+set termguicolors
+
+
+lua <<EOF
+
+require('lint').linters_by_ft = {
+  clojure = {'clj-kondo',}
+}
+
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  callback = function()
+    require("lint").try_lint()
+  end,
+})
+
+EOF
+
+" au BufWritePost lua require('lint').try_lint()
