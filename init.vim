@@ -28,21 +28,30 @@ function! Cc()
   endfor
 endfunction
 
-Plug 'quixotique/vim-delta'
+"Dependencies
+
+Plug 'kdheepak/lazygit.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'voldikss/vim-floaterm'
+
+"neogit
+"Plug 'TimUntersberger/neogit'
+
+"Plug 'sindrets/diffview.nvim'
+
+Plug 'Olical/nvim-local-fennel'
+Plug 'Olical/aniseed'
 
 Plug 'axelf4/vim-strip-trailing-whitespace'
 
-" Plug 'bfontaine/zprint.vim'
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
-" Plug 'vimwiki/vimwiki' , { 'branch': 'dev' }
-
-
-
-Plug 'nvim-lua/plenary.nvim'
-" Plug 'wlangstroth/vim-racket'
 Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'ms-jpq/coq_nvim'
 
@@ -50,7 +59,6 @@ Plug 'vim-syntastic/syntastic'
 " Plug 'aclaimant/syntastic-joker'
 Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'tpope/vim-fugitive'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'haya14busa/incsearch.vim'
@@ -60,24 +68,27 @@ Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
 Plug 'vimlab/split-term.vim'
 " Plug 'chrisbra/Colorizer'
+Plug 'marko-cerovac/material.nvim'
+
 Plug 'powerman/vim-plugin-AnsiEsc'
 
 " Plug 'Valloric/MatchTagAlways'
 " Plug 'lilydjwg/colorizer'
 
 Plug  'RRethy/vim-hexokinase'
-Plug 'naegelejd/vim-swig'
-
 
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'roxma/nvim-yarp'
 
 Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
+"Activity tracking
 Plug 'wakatime/vim-wakatime'
+Plug 'ActivityWatch/aw-watcher-vim'
 
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'dawsers/telescope-floaterm.nvim'
 
 Plug 'airblade/vim-rooter'
 Plug 'habamax/vim-asciidoctor'
@@ -86,6 +97,8 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'norcalli/nvim-terminal.lua'
 
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+
+
 
 " Plug 'rust-lang/rust.vim'
 
@@ -117,23 +130,22 @@ Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'jacoborus/tender.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'jnurmine/Zenburn'
+Plug 'savq/melange-nvim'
 Plug 'romainl/Apprentice'
 Plug 'jdsimcoe/abstract.vim'
 Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
 Plug 'dylon/vim-antlr'
-
-
-
-
 Plug 'hellerve/carp-vim'
-"Haskell
 
+" multiple cursors
+Plug 'mg979/vim-visual-multi'
+
+"Haskell
 Plug 'neovimhaskell/haskell-vim'
 Plug 'owickstrom/neovim-ghci'
 
 "Kotlin
-
 Plug 'udalov/kotlin-vim'
 
 Plug 'nvim-lua/popup.nvim'
@@ -149,23 +161,29 @@ Plug 'hood/popui.nvim'
 Plug  'vlime/vlime', {'rtp': 'vim/'}
 
 " Ghost text
-Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+" Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
 " Vim jack int
 Plug 'tpope/vim-dispatch'
-Plug 'clojure-vim/vim-jack-in'
+" Plug 'clojure-vim/vim-jack-in'
 " Only in Neovim:
 Plug 'radenling/vim-dispatch-neovim'
-
-
 
 Plug 'mfussenegger/nvim-lint'
 
 "vim history
 Plug 'simnalamburt/vim-mundo'
 
+"neorg
+Plug 'nvim-neorg/neorg'
+
 call plug#end()
 
 
+let g:aniseed#env = v:true
+
+let g:floaterm_width  = 0.8
+
+let g:floaterm_height = 0.8
 
 
 " Markdown
@@ -200,7 +218,7 @@ set smartcase           " ... unless the query has capital letters.
 set noshowmode
 set modeline
 set ruler "show the ruler line
-set background=dark
+"set background=dark
 set cursorline "show cursorline
 set backspace=indent,eol,start
 set laststatus=2
@@ -225,8 +243,6 @@ set t_vb=
 set tm=500
 
 
-
-
 set hlsearch
 let g:incsearch#auto_nohlsearch = 1
 
@@ -248,6 +264,12 @@ endif
 
 " Set hybrid togle line numbers
 set number norelativenumber
+
+"augroup numbertoggle
+"  autocmd!
+"  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+"  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
+"augroup END
 "
 " augroup numbertoggle
 "   autocmd!
@@ -281,8 +303,6 @@ set completeopt=longest,menuone
 
 
 
-
-
 "Resize splits
 map + <C-w>>
 map - <C-w><
@@ -290,14 +310,6 @@ map <leader>+ <C-w>+
 map <leader>- <C-w>-
 
 "Move throught splits
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
-" nnoremap <leader>n <C-w>w
-
-"parinfer
-
 
 
 
@@ -327,6 +339,11 @@ tnoremap <esc> <C-\><C-N>
 
 nnoremap ,n :bnext<CR>
 nnoremap ,p :bprevious<CR>
+" nnoremap gk   <C-o>
+" nnoremap gj   <C-i>
+
+
+
 
 "Colorizer
 let g:colorizer_maxlines=1000
@@ -429,37 +446,6 @@ let g:strip_whitespace_confirm=0
 
 
 
-if executable('fzf')
-
-"FZF line search
-nnoremap <silent> ,r :Rg<cr>
-
-"FZF search files
-nnoremap <silent> ,f :FZF  --reverse <cr>
-
-" FZF for open buffers
-  nnoremap <silent> ,b :Buffers<cr>
-
-" FZF for MRU
-  nnoremap <silent> ,m :History<cr>
-
-" Use fuzzy completion relative filepaths across directory
-  imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
-
-" Better command history with q:
-  command! CmdHist call fzf#vim#command_history({'right': '40'})
-  nnoremap q: :CmdHist<CR>
-
-" Better search history
-  command! QHist call fzf#vim#search_history({'right': '40'})
-  nnoremap q/ :QHist<CR>
-
-  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
-
- nmap ,<tab> <plug>(fzf-maps-n)
-
-
-end
 
 
 "Syntastic
@@ -468,6 +454,7 @@ end
  set statusline+=%#warningmsg#
  set statusline+=%{SyntasticStatuslineFlag()}
  set statusline+=%*
+ set statusline+=%F
 
  let g:syntastic_always_populate_loc_list = 0
  let g:syntastic_auto_loc_list = 0
@@ -493,10 +480,13 @@ let g:conjure_log_direction = "horizontal"
 let g:conjure_log_blacklist = ["up", "ret", "ret-multiline", "load-file",]
 
 
-" command! Req :%ConjureEval
-command! Sl :ConjureConnect 7888
-command!  Cj execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.nrepl-port")
-command!  Chj execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.shadow-cljs/nrepl.port")
+command!  ConjureNreplDotConnect execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.nrepl-port")
+command!  ConjureShadowReplDotConnect execute "ConjureConnect " . system("cat " . FindRootDirectory() .  "/.shadow-cljs/nrepl.port")
+
+nnoremap   <silent>   <leader>cn   :ConjureShadowReplDotConnect<CR>
+
+
+"command! Cd execute ":ConjureCljDebugInit"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -530,9 +520,7 @@ augroup filetypedetect
 "  au BufRead,BufNewFile *.rkt set filetype=racket
 
  au BufRead,BufNewFile *.kts set filetype=kotlin
-"  autocmd BufReadPost *.kts setlocal filetype=kotlin
 
-" au Filetype clojure let g:AutoPairs = {}
 au Filetype clojure let g:AutoPairs = {}
 au Filetype lisp let g:AutoPairs = {}
 
@@ -583,10 +571,14 @@ map + <C-w>>
 map - <C-w><
 
 " colorscheme jellybeans
-colorscheme zenburn
+" colorscheme zenburn
 " colorscheme nord
+" colorscheme material
+"colorscheme tender
+colorscheme melange
+"au ColorScheme * hi Normal ctermgb=
+hi Normal guibg=grey19
 
-" colorscheme tender
 set expandtab
 vmap ,x :!tidy -q -i --show-errors 0<CR>
 
@@ -737,7 +729,12 @@ highlight SpellBad ctermfg=224   ctermbg='NONE' gui=underline guibg='NONE' guisp
 
 set conceallevel=0
 
-
+"lua << EOF
+"
+"local neogit = require('neogit')
+"neogit.setup {}
+"
+"EOF
 
 lua << EOF
 local coq = require "coq" -- add this
@@ -753,7 +750,7 @@ EOF
 
 
 
-lua << EOF
+lua <<EOF
 local nvim_lsp = require('lspconfig')
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -809,6 +806,10 @@ EOF
 
 
 lua << EOF
+
+
+
+
 require'nvim-treesitter.configs'.setup {
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = {"clojure", "lua", "rust",  "java",  "kotlin"}  ,
@@ -858,6 +859,7 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 
 
 
@@ -890,7 +892,11 @@ let g:vimwiki_list = [{'path': '~/.local/share/vimwiki/'}]
  " 🐓 Coq completion settings
 "
  " Set recommended to false
- let g:coq_settings = { "keymap.recommended": v:false }
+"  let g:coq_settings = { "keymap.recommended": v:false,"display.pum.fast_close": v:false  }
+
+
+let g:coq_settings = { "keymap.recommended": v:false}
+
 
  " Keybindings
 ino <silent><expr> <Esc>   pumvisible() ? "\<C-e><Esc>" : "\<Esc>"
@@ -1032,3 +1038,108 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 EOF
 
 " au BufWritePost lua require('lint').try_lint()
+
+
+map <leader>m <Nop>
+"nnoremap <silent>   ,g   :Neogit<cr>
+"nnoremap <silent>   ,d   :DiffviewOpen<cr>
+"nnoremap <silent>   ,D   :DiffviewOpen master<cr>
+"nnoremap <silent>   ,gl  :Neogit log<cr>
+"nnoremap <silent>   ,gp  :Neogit push<cr>
+
+nnoremap <silent> <leader>ni  :Neorg index<cr>
+nnoremap <silent> <leader>nr  :Neorg return<cr>
+
+" lua <<EOF
+"
+" require('neorg').setup {
+"     load = {
+"      ["core.defaults"] = {},
+"      ["core.concealer"] = {  },
+"      ["core.export"] = {},
+"      ["core.dirman"] = {
+"              config = {
+"                   workspaces = {
+"                     notes= "~/.neorg/notes",
+"                     work= "~/.neorg/work"
+"                   },
+"                   default_workspace = "notes",
+"                      }
+"              },
+"      ["core.keybinds"] = {
+"        config = {
+"                   default_keybinds = true,
+"                   neorg_leader = ",",
+"        },
+"      },
+"    }
+" }
+"
+"
+" EOF
+"
+
+
+" if executable('fzf')
+"
+" "FZF line search
+" nnoremap <silent> ,r :Rg<cr>
+"
+" "FZF search files
+" nnoremap <silent> ,f :FZF  --reverse <cr>
+"
+" " FZF for open buffers
+"   nnoremap <silent> ,b :Buffers<cr>
+"
+" " FZF for MRU
+"   nnoremap <silent> ,m :History<cr>
+"
+" " Use fuzzy completion relative filepaths across directory
+"   imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+"
+" " Better command history with q:
+"   command! CmdHist call fzf#vim#command_history({'right': '40'})
+"   nnoremap q: :CmdHist<CR>
+"
+" " Better search history
+"   command! QHist call fzf#vim#search_history({'right': '40'})
+"   nnoremap q/ :QHist<CR>
+"
+"   command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
+"
+"  nmap ,<tab> <plug>(fzf-maps-n)
+"
+"
+" end
+"
+
+
+
+command -range=% -nargs=* Floatermkoggle execute "FloatermKill" |  execute "FloatermToggle"
+
+nnoremap   <silent>   <leader>tf    :FloatermNew  --height=0.9 --width=0.9<CR>
+tnoremap   <silent>   <leader>tf    <C-\><C-n>:FloatermNew  --height=0.9 --width=0.9<CR>
+nnoremap   <silent>   <leader>tp    :FloatermPrev<CR>
+tnoremap   <silent>   <leader>tp    <C-\><C-n>:FloatermPrev<CR>
+nnoremap   <silent>   <leader>tn    :FloatermNext<CR>
+tnoremap   <silent>   <leader>tn    <C-\><C-n>:FloatermNext<CR>
+nnoremap   <silent>   <leader>tt    :FloatermToggle<CR>
+tnoremap   <silent>   <leader>tt    <C-\><C-n>:FloatermToggle<CR>
+nnoremap   <silent>   <leader>tk    :Floatermkoggle <C>
+tnoremap   <silent>   <leader>tk    <C-\><C-n>:Floatermkoggle<C>
+nnoremap   <silent>   <leader>tx    :FloatermKill<C>
+tnoremap   <silent>   <leader>tx    <C-\><C-n>:FloatermKill<C>
+nnoremap   <silent>   <leader>tl    :Telescope floaterm<CR>
+tnoremap   <silent>   <leader>tl    <C-\><C-n>:Telescope floaterm<CR>
+nnoremap   <silent>   <leader>ts    :FloatermSend<CR>
+
+tnoremap   <silent>   <leader>tu   <C-\><C-n>:FloatermNew   --height=0.9 --width=0.9  gitui<CR>
+nnoremap   <silent>   <leader>tu    :FloatermNew   --height=0.9 --width=0.9  gitui<CR>
+
+nnoremap   <silent>   <leader>tg    :FloatermNew  --height=0.9 --width=0.9 lazygit<CR>
+tnoremap   <silent>   <leader>tg    <C-\><C-n>:FloatermNew  --height=0.9 --width=0.9 lazygit<CR>
+
+
+let g:rooter_manual_only = 1
+
+
