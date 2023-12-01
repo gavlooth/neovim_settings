@@ -37,7 +37,12 @@ Plug 'voldikss/vim-floaterm'
 "neogit
 "Plug 'TimUntersberger/neogit'
 
-"Plug 'sindrets/diffview.nvim'
+
+
+Plug 'f-person/git-blame.nvim'
+Plug 'sindrets/diffview.nvim'     
+
+"Public
 
 Plug 'Olical/nvim-local-fennel'
 Plug 'Olical/aniseed'
@@ -52,6 +57,9 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
+
+Plug 'kabouzeid/nvim-lspinstall'
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'ms-jpq/coq_nvim'
 
@@ -61,6 +69,10 @@ Plug 'rhysd/vim-grammarous'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+" If you want to have icons in your statusline choose one of these
+Plug 'nvim-tree/nvim-web-devicons'
+
 Plug 'haya14busa/incsearch.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
@@ -83,8 +95,8 @@ Plug 'roxma/nvim-yarp'
 Plug 'davidgranstrom/nvim-markdown-preview'
 Plug 'lambdalisue/suda.vim'
 "Activity tracking
-Plug 'wakatime/vim-wakatime'
-Plug 'ActivityWatch/aw-watcher-vim'
+"Plug 'wakatime/vim-wakatime'
+"Plug 'ActivityWatch/aw-watcher-vim'
 
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -102,6 +114,9 @@ Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 " Plug 'rust-lang/rust.vim'
 
+Plug 'ionide/Ionide-vim', {
+      \ 'do':  'make fsautocomplete',
+      \}
 Plug 'pest-parser/pest.vim'
 
 Plug 'tpope/vim-dispatch'
@@ -124,8 +139,8 @@ Plug 'mkarmona/colorsbox'
 Plug 'sheerun/vim-wombat-scheme'
 Plug 'twerth/ir_black'
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
-
-
+" Formater
+Plug 'stevearc/conform.nvim'
 
 Plug 'jacoborus/tender.vim'
 Plug 'joshdick/onedark.vim'
@@ -137,6 +152,8 @@ Plug 'AlessandroYorba/Alduin'
 Plug 'tlhr/anderson.vim'
 Plug 'dylon/vim-antlr'
 Plug 'hellerve/carp-vim'
+Plug 'nanotee/sqls.nvim'
+
 
 " multiple cursors
 Plug 'mg979/vim-visual-multi'
@@ -174,16 +191,19 @@ Plug 'mfussenegger/nvim-lint'
 Plug 'simnalamburt/vim-mundo'
 
 "neorg
+
 Plug 'nvim-neorg/neorg'
+
+Plug 'nvim-tree/nvim-web-devicons'
 
 call plug#end()
 
 
 let g:aniseed#env = v:true
 
-let g:floaterm_width  = 0.8
+let g:floaterm_width  = 0.9
 
-let g:floaterm_height = 0.8
+let g:floaterm_height = 0.9
 
 
 " Markdown
@@ -403,6 +423,8 @@ endfunction
 
 command -range=% -nargs=* S <line1>,<line2>!perl -p -e  <args>
 
+command -range=% -nargs=* Ss <line1>,<line2>!sregx  <args>
+
 command -range=% -nargs=* Sp execute "normal mp" | <line1>,<line2>!perl -p -e  <args> | execute 'normal `p'
 
 command -range -nargs=1 S1 call s:Substitute(<line1>, <line2>, <q-args>)
@@ -421,8 +443,9 @@ function ParinferToggleMode()
   echo "Mode is now : " g:parinfer_mode
 endfunction
 
+nnoremap ,P :call ParinferToggleMode()<CR>
 
-nnoremap ,<leader> :call ParinferToggleMode()<CR>
+nnoremap ,r :call RooterToggle()<CR>
 
 highlight g1 guibg='#3EA055'
 
@@ -586,7 +609,7 @@ vmap ,x :!tidy -q -i --show-errors 0<CR>
 
 
 
-command! Fmjson  :%!jq .
+command! Fj  :%!jq .
 
 command! Today :r!echo $(date +\%A\%t\%m\%t\%Y)
 
@@ -615,33 +638,31 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 
 " airline symbols
- let g:airline_left_sep = ''
- let g:airline_left_alt_sep = ''
- let g:airline_right_sep = ''
- let g:airline_right_alt_sep = ''
- let g:airline_symbols.branch = ''
- let g:airline_symbols.readonly = ''
- let g:airline_symbols.linenr = ''
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
 
- " AirLine Theme
- let g:airline_theme = 'tender'
- let g:airline_left_sep='>'
- let g:airline_theme='badwolf'
-
-
+" AirLine Theme
+let g:airline_theme = 'tender'
+let g:airline_left_sep='>'
+let g:airline_theme='badwolf'
 
 
- highlight Cursor guifg=white guibg= steelblue
- highlight iCursor guifg=white guibg= #DECAB0
- highlight CursorLine  ctermbg=black  guibg=#2B1B17
+
+
+highlight Cursor guifg=white guibg= steelblue
+highlight iCursor guifg=white guibg= #DECAB0
+highlight CursorLine  ctermbg=black  guibg=#2B1B17
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
 set guicursor+=n-v-c:blinkon0
 set guicursor+=i:blinkwait10
 
-
 let g:rainbow_active = 1
-
 let g:clojure_fuzzy_indent=1
 let g:clojure_align_multiline_strings = 1
 
@@ -654,22 +675,10 @@ let g:ctrlp_custom_ignore = {
  \ 'link': 'some_bad_symbolic_links',
  \ }
 
-
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-
-" au User Ncm2Plugin call ncm2#register_source({
-"         \ 'name' : 'css',
-"         \ 'priority': 9,
-"         \ 'subscope_enable': 1,
-"         \ 'scope': ['css','scss'],
-"         \ 'mark': 'css',
-"         \ 'word_pattern': '[\w\-]+',
-"         \ 'complete_pattern': ':\s*',
-"         \ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-"         \ })
 
 cnoreabbrev Prl  %!perl -pi -e
 
@@ -688,28 +697,10 @@ let g:LanguageClient_autoStart = 1
 
 
 
-
-
 dig l;         0955
-" dig L;         0923
-" dig e;         0949
-" dig b;         0946
-" dig g;         0947
-" dig d;         0948
-" dig y;         0951
-" dig h;         0951
-"
-" dig 8;         0952
-"
-" dig h;         0942
-" dig k;         0954
-" dig m;         0956
-" dig p;         0960
-" dig r;         0961
-" dig s;         0963
-" dig t;         0964
-" dig f;         0966
-" dig q;         0968
+
+
+
 
 nnoremap + :res +5<CR>
 nnoremap - :res -5<CR>
@@ -720,6 +711,7 @@ let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""',
 
 let g:LanguageClient_serverCommands = {
 \ 'rust': ['rust-analyzer'],
+\ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
 \ }
 
 
@@ -744,11 +736,9 @@ require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.ccls.setup{ coq.lsp_ensure_capabilities{} }
 require'lspconfig'.rust_analyzer.setup{coq.lsp_ensure_capabilities{}}
-
+require'lspconfig'.sqlls.setup{ coq.lsp_ensure_capabilities{} }
 
 EOF
-
-
 
 lua <<EOF
 local nvim_lsp = require('lspconfig')
@@ -889,7 +879,7 @@ let g:conjure#log#trim#at = 100
 
 let g:vimwiki_list = [{'path': '~/.local/share/vimwiki/'}]
 
- " 🐓 Coq completion settings
+" 🐓 Coq completion settings
 "
  " Set recommended to false
 "  let g:coq_settings = { "keymap.recommended": v:false,"display.pum.fast_close": v:false  }
@@ -941,77 +931,8 @@ augroup end
 
 
 
-        "sldb"      The debugger window.
-        "repl"      The REPL window.
-        "inspector" The inspector window.
-        "xref"      The cross reference window.
-        "notes"     The compiler notes window.
-        "threads"   The threads window.
-        "preview"   The preview window.
-        "arglist"   The arglist window.
-        "input"     The input buffer window.
-        "server"    The server output window.
-        "trace"     The trace dialog window.
-        "mrepl"     The MREPL window.
-
-" g:vlime_window_settings                      *g:vlime_window_settings*
-"     A |dict| to specify window positions and sizes. Vlime will consult
-"     this variable when creating a new window. The keys should be
-"     Vlime window types, and the values should be |dict|s containing
-"     "pos", "size", and "vertical" parameters. For example:
-
-
-    " These settings will cause the debugger window to be created
-    " on the right, vertically.
-    "
-    " You can also replace the window parameters dict with a |Funcref|
-    " or a |lambda| expression to generate the parameters dynamically:
-    "
-    "     let g:vlime_window_settings = {
-    "             \ "sldb": { -> {"pos": "belowright", "size": winheight(".") / 3}}
-    "         \ }
-    "
-    " With this setting, the debugger window will be one third of the
-    " current window size.
-    "
-    "                                               *vlime-window-types*
-    " Available window types:
-
-        "sldb"      The debugger window.
-        "repl"      The REPL window.
-        "inspector" The inspector window.
-        "xref"      The cross reference window.
-        "notes"     The compiler notes window.
-        "threads"   The threads window.
-        "preview"   The preview window.
-        "arglist"   The arglist window.
-        "input"     The input buffer window.
-        "server"    The server output window.
-        "trace"     The trace dialog window.
-        "mrepl"     The MREPL window.
-
-    " Legal values for the parameters:
-    "
-    "     "pos":
-    "         "aboveleft", "belowright", "topleft", "botright".
-    "         (See |aboveleft| and the alike to get explanations of
-    "         these positions)
-    "     "size":
-    "         Any positive integer, or v:null to tell Vlime not to
-    "         resize the window.
-    "     "vertical":
-    "         v:true or v:false.
-
-
-
-
 highlight clear SpellBad
 highlight SpellBad ctermfg=009 ctermbg=011 guifg=#ff0000 guibg=#ffff00
-
-
-"zprint
-
-" let g:zprint#options_map = '{:search-config? true}'
 
 let g:zprint#options_map = '{:search-config? false :style :indent-only}'
 
@@ -1029,55 +950,66 @@ require('lint').linters_by_ft = {
   clojure = {'clj-kondo',}
 }
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  callback = function()
-    require("lint").try_lint()
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+--   callback = function()
+--     require("lint").try_lint()
+--   end,
+-- })
 
 EOF
 
 " au BufWritePost lua require('lint').try_lint()
 
-
 map <leader>m <Nop>
-"nnoremap <silent>   ,g   :Neogit<cr>
-"nnoremap <silent>   ,d   :DiffviewOpen<cr>
-"nnoremap <silent>   ,D   :DiffviewOpen master<cr>
-"nnoremap <silent>   ,gl  :Neogit log<cr>
-"nnoremap <silent>   ,gp  :Neogit push<cr>
 
 nnoremap <silent> <leader>ni  :Neorg index<cr>
 nnoremap <silent> <leader>nr  :Neorg return<cr>
 
-" lua <<EOF
-"
-" require('neorg').setup {
-"     load = {
-"      ["core.defaults"] = {},
-"      ["core.concealer"] = {  },
-"      ["core.export"] = {},
-"      ["core.dirman"] = {
-"              config = {
-"                   workspaces = {
-"                     notes= "~/.neorg/notes",
-"                     work= "~/.neorg/work"
-"                   },
-"                   default_workspace = "notes",
-"                      }
-"              },
-"      ["core.keybinds"] = {
-"        config = {
-"                   default_keybinds = true,
-"                   neorg_leader = ",",
-"        },
-"      },
-"    }
-" }
-"
-"
-" EOF
-"
+lua <<EOF
+
+if vim.g.started_by_firenvim == true then
+ vim.g.firenvim_config.localSettings['.*'] = {selector = 'textarea:not([rows="4"]):not([rows="2"]):not([rows="1"]):not([rows="0"]), textarea:not([type=search])' }
+end
+
+require('neorg').setup {
+    load = {
+     ["core.defaults"] = {},
+     ["core.concealer"] = {  },
+     ["core.integrations.treesitter"]= {},
+     ["core.export"] = {},
+     ["core.ui.calendar"]  = {},
+     ["core.dirman"] = {
+             config = {
+                  workspaces = {
+                    notes= "~/.neorg/notes",
+                    work= "~/.neorg/work"
+                  },
+                  default_workspace = "notes",
+                     }
+             },
+     ["core.keybinds"] = {
+       config = {
+                  default_keybinds = true,
+                  neorg_leader = ",",
+       },
+     },
+   }
+}
+
+
+
+require("conform").setup({
+  formatters_by_ft = {
+    -- lua = { "stylua" },
+    -- Conform will run multiple formatters sequentially
+    -- python = { "isort", "black" },
+    -- Use a sub-list to run only the first available formatter
+     -- javascript = { { "prettierd", "prettier" } },
+    clojure = { "zprint"  },
+  },
+})
+EOF
+
 
 
 " if executable('fzf')
@@ -1141,5 +1073,3 @@ tnoremap   <silent>   <leader>tg    <C-\><C-n>:FloatermNew  --height=0.9 --width
 
 
 let g:rooter_manual_only = 1
-
-
