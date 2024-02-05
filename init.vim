@@ -1,6 +1,6 @@
-set rtp+=~/.vim
+set rtp+=C:\Users\chris\AppData\Local\nvim
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('C:\Users\chris\AppData\Local\nvim\plugged')
 
 function! BuildComposer(info)
   if a:info.status != 'unchanged' || a:info.force
@@ -34,10 +34,28 @@ Plug 'kdheepak/lazygit.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'voldikss/vim-floaterm'
 
+ Plug 'ahmedkhalf/project.nvim'
+
+
 "neogit
 "Plug 'TimUntersberger/neogit'
 
+Plug 'kabouzeid/nvim-lspinstall'
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
 
+
+" For vsnip users.
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
+Plug 'vim-denops/denops.vim'
+
+Plug 'shuntaka9576/preview-asciidoc.vim'
 
 Plug 'f-person/git-blame.nvim'
 Plug 'sindrets/diffview.nvim'     
@@ -58,10 +76,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 
-Plug 'kabouzeid/nvim-lspinstall'
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'ms-jpq/coq_nvim'
+Plug 'NTBBloodbath/zig-tools.nvim'
 
 Plug 'vim-syntastic/syntastic'
 " Plug 'aclaimant/syntastic-joker'
@@ -100,9 +115,12 @@ Plug 'lambdalisue/suda.vim'
 
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'dawsers/telescope-floaterm.nvim'
+Plug 'jvgrootveld/telescope-zoxide'
+Plug 'nanotee/zoxide.vim'
 
-Plug 'airblade/vim-rooter'
+
 Plug 'habamax/vim-asciidoctor'
 Plug 'jiangmiao/auto-pairs'
 
@@ -120,7 +138,6 @@ Plug 'ionide/Ionide-vim', {
 Plug 'pest-parser/pest.vim'
 
 Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-projectionist'
 
 Plug 'lervag/vimtex'
 Plug 'Olical/conjure' , { 'branch': 'develop' }
@@ -728,17 +745,6 @@ set conceallevel=0
 "
 "EOF
 
-lua << EOF
-local coq = require "coq" -- add this
-
-require'lspconfig'.clojure_lsp.setup{ coq.lsp_ensure_capabilities{} }
-require'lspconfig'.texlab.setup{ coq.lsp_ensure_capabilities{} }
-require'lspconfig'.pyright.setup{ coq.lsp_ensure_capabilities{} }
-require'lspconfig'.ccls.setup{ coq.lsp_ensure_capabilities{} }
-require'lspconfig'.rust_analyzer.setup{coq.lsp_ensure_capabilities{}}
-require'lspconfig'.sqlls.setup{ coq.lsp_ensure_capabilities{} }
-
-EOF
 
 lua <<EOF
 local nvim_lsp = require('lspconfig')
@@ -775,22 +781,6 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
 end
-
--- Use a loop to conveniently call 'setup' on multiple servers and
--- map buffer local keybindings when the language server attaches
-local servers = { 'clojure_lsp' }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
-     coq.lsp_ensure_capabilities{} ,
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-  }
-end
-
-vim.cmd([[COQnow]])
-
 
 EOF
 
@@ -1072,4 +1062,75 @@ nnoremap   <silent>   <leader>tg    :FloatermNew  --height=0.9 --width=0.9 lazyg
 tnoremap   <silent>   <leader>tg    <C-\><C-n>:FloatermNew  --height=0.9 --width=0.9 lazygit<CR>
 
 
-let g:rooter_manual_only = 1
+
+
+
+lua <<EOF
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+      },
+    mapping = cmp.mapping.preset.insert({
+
+    ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                    cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+            elseif has_words_before() then
+                    cmp.complete()
+            else
+                    fallback()
+                    end
+                    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                    cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+            else
+                    fallback()
+                    end
+                    end, { "i", "s" }),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }, -- For vsnip users.
+    }, {
+            { name = 'buffer' },
+    })
+    })
+
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['clojure_lsp'].setup {
+          capabilities = capabilities
+  }
+
+-- Set up telescope projects
+require'telescope'.load_extension('project')
+require("telescope").load_extension('zoxide')
+vim.keymap.set("n", "<leader>cd", require("telescope").extensions.zoxide.list)
+EOF
+
+
+
