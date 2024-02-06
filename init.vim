@@ -1130,6 +1130,21 @@ lua <<EOF
 require'telescope'.load_extension('project')
 require("telescope").load_extension('zoxide')
 vim.keymap.set("n", "<leader>cd", require("telescope").extensions.zoxide.list)
+
+vim.g.firenvim_config = {
+    globalSettings = { alt = "all" },
+    localSettings = {
+        [".*"] = {
+            cmdline  = "neovim",
+            content  = "text",
+            priority = 0,
+            selector = 'textarea:not([rows="1"])' ,
+            takeover = "always"
+        }
+    }
+}
+
+
 EOF
 
 
