@@ -38,7 +38,6 @@ Plug 'voldikss/vim-floaterm'
 
 
 "neogit
-"Plug 'TimUntersberger/neogit'
 
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'neovim/nvim-lspconfig'
@@ -49,6 +48,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 
 
+
 " For vsnip users.
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
@@ -57,6 +57,8 @@ Plug 'vim-denops/denops.vim'
 
 Plug 'shuntaka9576/preview-asciidoc.vim'
 
+"Git integrations
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'f-person/git-blame.nvim'
 Plug 'sindrets/diffview.nvim'     
 
@@ -339,15 +341,12 @@ set completeopt=longest,menuone
 "set formatoptions-=tc
 
 
-
-"Resize splits
-map + <C-w>>
-map - <C-w><
-map <leader>+ <C-w>+
-map <leader>- <C-w>-
+nmap <M-=> :vertical resize +2<CR>
+nmap <M--> :vertical resize -2<CR>
+nmap + :resize +2<CR>
+nmap - :resize -2<CR>
 
 "Move throught splits
-
 
 
 nnoremap <SPACE> <Nop>
@@ -362,6 +361,7 @@ let maplocalleader=" "
 
 "Easier emmet vim
 map <leader>, <C-y>,
+
 
 "Open html files in chrome
 nnoremap <F5> :update<Bar>silent !xdg-open %:p &<CR>
@@ -569,10 +569,6 @@ function! GetNreplPort()
 endfunction
 
 
-if bufwinnr(1)
-  map + <C-W>+
-  map - <C-W>-
-endif
 
 
  " suppress the annoying 'match x of y', 'The only match' and 'Pattern not
@@ -607,8 +603,6 @@ let g:colorizer_disable_bufleave = 1
 
 
 
-map + <C-w>>
-map - <C-w><
 
 " colorscheme jellybeans
 " colorscheme zenburn
@@ -717,10 +711,6 @@ let g:LanguageClient_autoStart = 1
 dig l;         0955
 
 
-
-
-nnoremap + :res +5<CR>
-nnoremap - :res -5<CR>
 let  g:AutoPairs= {'(':')', '[':']', '{':'}','"':'"',  '```':'```', '"""':'"""', "'''":"'''" }
 
 
@@ -928,6 +918,7 @@ let g:zprint#options_map = '{:search-config? false :style :indent-only}'
 
 let g:zprint#make_autocmd = v:true
 
+let g:grammarous#use_vim_spelllang  = 1
 
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
@@ -1143,6 +1134,92 @@ vim.g.firenvim_config = {
         }
     }
 }
+
+require('gitsigns').setup {
+  signs = {
+    add          = { text = '│' },
+    change       = { text = '│' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    follow_files = true
+  },
+  auto_attach = true,
+  attach_to_untracked = false,
+  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+    virt_text_priority = 100,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  max_file_length = 40000, -- Disable if file is longer than this (in lines)
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+  yadm = {
+    enable = false
+  },
+
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    -- Actions
+    map('n', '<leader>hs', gs.stage_hunk)
+    map('n', '<leader>hr', gs.reset_hunk)
+    map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('n', '<leader>hS', gs.stage_buffer)
+    map('n', '<leader>hu', gs.undo_stage_hunk)
+    map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
+
 
 
 EOF
